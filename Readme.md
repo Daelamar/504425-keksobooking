@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Delamar](https://up.htmlacademy.ru/javascript/14/user/504425).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Хапов](https://up.htmlacademy.ru/javascript/14/user/118459).
 
 ---
 

@@ -24,7 +24,7 @@ var photos = [
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
-
+/*
 var getRandomLengthArray = function (array) {
   var newArray = [];
   var oldArray = shuffleArray(array);
@@ -35,13 +35,13 @@ var getRandomLengthArray = function (array) {
   }
   return newArray;
 };
+*/
 
-/* Не работает
 var getRandomLengthArray = function (array) {
-  var newArr = array.splice();
+  var newArr = array.slice();
   return newArr.splice(0, getRandomNumber(1, newArr.length - 1));
 };
-*/
+
 var shuffleArray = function (array) {
   for (var i = array.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
@@ -98,14 +98,13 @@ var createAdvertisement = function (numbersOfAdvertisement) {
         y: locationY
       }
     };
-    console.log(offers.offer.features);
+
     notices.push(offers);
   }
   return notices;
 };
 
 var mapArr = createAdvertisement(8);
-
 var map = document.querySelector('.map');
 
 map.classList.remove('map--faded');
@@ -136,10 +135,10 @@ var templateMapCard = document.querySelector('template').content.querySelector('
 
 var createNewFeatures = function (addFeatures) {
   var newFeature = document.createDocumentFragment();
-  for (var j = 0; j < addFeatures; j++) {
+  for (var j = 0; j < addFeatures.length; j++) {
     var newLi = document.createElement('li');
-    newLi.classList.add('.popup__feature');
-    newLi.classList.add('.popup__feature--' + addFeatures[j]);
+    newLi.classList.add('popup__feature');
+    newLi.classList.add('popup__feature--' + addFeatures[j]);
     newFeature.appendChild(newLi);
   }
   return newFeature;
@@ -176,5 +175,7 @@ var renderCard = function (mapCards) {
   popupElement.querySelector('.popup__photos').appendChild(createNewPhotosList(mapCards.offer.photos));
   popupElement.querySelector('.popup__avatar').src = mapCards.author.avatar;
   return popupElement;
+
 };
 map.insertBefore(renderCard(mapArr[0]), filtersContainer);
+

@@ -107,22 +107,6 @@ var createAdvertisement = function (numbersOfAdvertisement) {
 
 mapArr = createAdvertisement(8);
 
-var renderPin = function (mapPins) {
-  var mapPin = templateMapPin.cloneNode(true);
-
-  mapPin.style.left = mapPins.location.x - PIN_WIDTH / 2 + 'px';
-  mapPin.style.top = mapPins.location.y - PIN_HEIGHT + 'px';
-  mapPin.querySelector('img').src = mapPins.author.avatar;
-  mapPin.querySelector('img').alt = mapPins.offer.title;
-
-  return mapPin;
-};
-
-for (var i = 0; i < mapArr.length; i++) {
-  fragment.appendChild(renderPin(mapArr[i]));
-}
-mapPinList.appendChild(fragment);
-
 var createNewFeatures = function (addFeatures) {
   var newFeature = document.createDocumentFragment();
   for (var j = 0; j < addFeatures.length; j++) {
@@ -166,5 +150,20 @@ var renderCard = function (mapCards) {
   return popupElement;
 
 };
-map.insertBefore(renderCard(mapArr[0]), filtersContainer);
 
+var renderPin = function (mapPins) {
+  var mapPin = templateMapPin.cloneNode(true);
+
+  mapPin.style.left = mapPins.location.x - PIN_WIDTH / 2 + 'px';
+  mapPin.style.top = mapPins.location.y - PIN_HEIGHT + 'px';
+  mapPin.querySelector('img').src = mapPins.author.avatar;
+  mapPin.querySelector('img').alt = mapPins.offer.title;
+
+  return mapPin;
+};
+
+for (var i = 0; i < mapArr.length; i++) {
+  fragment.appendChild(renderPin(mapArr[i]));
+}
+mapPinList.appendChild(fragment);
+map.insertBefore(renderCard(mapArr[0]), filtersContainer);

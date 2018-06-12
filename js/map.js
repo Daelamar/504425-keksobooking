@@ -20,7 +20,6 @@ var PHOTOS_LIST = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
-var AVATAR_INDEX = 0;
 
 var mapArr;
 var map = document.querySelector('.map');
@@ -28,22 +27,13 @@ var mapPinList = document.querySelector('.map__pins');
 var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
 var filtersContainer = document.querySelector('.map__filters-container');
 var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
+var fragment = document.createDocumentFragment();
+
+map.classList.remove('map--faded');
 
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
-/*
-var getRandomLengthArray = function (array) {
-  var newArray = [];
-  var oldArray = shuffleArray(array);
-  var arrayLength = oldArray.length;
-  var num = getRandomNumber(1, arrayLength);
-  for (var i = 0; i < num; i++) {
-    newArray.push(oldArray[i]);
-  }
-  return newArray;
-};
-*/
 
 var getRandomLengthArray = function (array) {
   var newArr = shuffleArray(array.slice());
@@ -79,14 +69,13 @@ var apartmentsType = function (type) {
   return typeOffer;
 };
 
-var createObject = function () {
+var createOffer = function (index) {
   var locationX = getRandomNumber(300, 900);
   var locationY = getRandomNumber(130, 630);
-  AVATAR_INDEX++;
 
   return {
     author: {
-      avatar: 'img/avatars/user0' + (AVATAR_INDEX) + '.png'
+      avatar: 'img/avatars/user0' + (index + 1) + '.png'
     },
     offer: {
       title: TITLE_LIST[i],
@@ -111,13 +100,12 @@ var createObject = function () {
 var createAdvertisement = function (numbersOfAdvertisement) {
   var notices = [];
   for (var i = 0; i < numbersOfAdvertisement; i++) {
-    notices.push(createObject());
+    notices.push(createOffer(i));
   }
   return notices;
 };
 
 mapArr = createAdvertisement(8);
-map.classList.remove('map--faded');
 
 var renderPin = function (mapPins) {
   var mapPin = templateMapPin.cloneNode(true);
@@ -130,7 +118,6 @@ var renderPin = function (mapPins) {
   return mapPin;
 };
 
-var fragment = document.createDocumentFragment();
 for (var i = 0; i < mapArr.length; i++) {
   fragment.appendChild(renderPin(mapArr[i]));
 }

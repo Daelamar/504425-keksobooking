@@ -1,8 +1,8 @@
 'use strict';
 
-var pinWidth = 40;
-var pinHeight = 40;
-var titleList = [
+var PIN_WIDTH = 40;
+var PIN_HEIGHT = 40;
+var TITLE_LIST = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
   'Огромный прекрасный дворец',
@@ -12,14 +12,22 @@ var titleList = [
   'Уютное бунгало далеко от моря',
   'Неуютное бунгало по колено в воде'
 ];
-var checkinAndCheckoutList = ['12:00', '13:00', '14:00'];
-var typeList = ['palace', 'flat', 'house', 'bungalo'];
-var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var photos = [
+var CHECKIN_AND_CHECKOUT_LIST = ['12:00', '13:00', '14:00'];
+var TYPE_LIST = ['palace', 'flat', 'house', 'bungalo'];
+var FEATURES_LIST = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var PHOTOS_LIST = [
   'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
+var AVATAR_INDEX = 0;
+
+var mapArr;
+var map = document.querySelector('.map');
+var mapPinList = document.querySelector('.map__pins');
+var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
+var filtersContainer = document.querySelector('.map__filters-container');
+var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
 
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -38,7 +46,7 @@ var getRandomLengthArray = function (array) {
 */
 
 var getRandomLengthArray = function (array) {
-  var newArr = array.slice();
+  var newArr = shuffleArray(array.slice());
   return newArr.splice(0, getRandomNumber(1, newArr.length - 1));
 };
 
@@ -71,53 +79,51 @@ var apartmentsType = function (type) {
   return typeOffer;
 };
 
+var createObject = function () {
+  var locationX = getRandomNumber(300, 900);
+  var locationY = getRandomNumber(130, 630);
+  AVATAR_INDEX++;
+
+  return {
+    author: {
+      avatar: 'img/avatars/user0' + (AVATAR_INDEX) + '.png'
+    },
+    offer: {
+      title: TITLE_LIST[i],
+      address: locationX + ', ' + locationY,
+      price: getRandomNumber(1000, 1000000),
+      type: TYPE_LIST[getRandomNumber(0, TYPE_LIST.length - 1)],
+      rooms: getRandomNumber(1, 5),
+      guests: getRandomNumber(1, 10),
+      checkin: CHECKIN_AND_CHECKOUT_LIST[getRandomNumber(0, CHECKIN_AND_CHECKOUT_LIST.length - 1)],
+      checkout: CHECKIN_AND_CHECKOUT_LIST[getRandomNumber(0, CHECKIN_AND_CHECKOUT_LIST.length - 1)],
+      features: getRandomLengthArray(FEATURES_LIST),
+      description: '',
+      photos: shuffleArray(PHOTOS_LIST)
+    },
+    location: {
+      x: locationX,
+      y: locationY
+    }
+  };
+};
+
 var createAdvertisement = function (numbersOfAdvertisement) {
   var notices = [];
   for (var i = 0; i < numbersOfAdvertisement; i++) {
-    var locationX = getRandomNumber(300, 900);
-    var locationY = getRandomNumber(130, 630);
-    var offers = {
-      author: {
-        avatar: 'img/avatars/user0' + (i + 1) + '.png'
-      },
-      offer: {
-        title: titleList[i],
-        address: locationX + ', ' + locationY,
-        price: getRandomNumber(1000, 1000000),
-        type: typeList[getRandomNumber(0, typeList.length - 1)],
-        rooms: getRandomNumber(1, 5),
-        guests: getRandomNumber(1, 10),
-        checkin: checkinAndCheckoutList[getRandomNumber(0, checkinAndCheckoutList.length - 1)],
-        checkout: checkinAndCheckoutList[getRandomNumber(0, checkinAndCheckoutList.length - 1)],
-        features: getRandomLengthArray(features),
-        description: '',
-        photos: shuffleArray(photos)
-      },
-      location: {
-        x: locationX,
-        y: locationY
-      }
-    };
-
-    notices.push(offers);
+    notices.push(createObject());
   }
   return notices;
 };
 
-var mapArr = createAdvertisement(8);
-var map = document.querySelector('.map');
-
+mapArr = createAdvertisement(8);
 map.classList.remove('map--faded');
 
-var mapPinList = document.querySelector('.map__pins');
-var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
-
 var renderPin = function (mapPins) {
-
   var mapPin = templateMapPin.cloneNode(true);
 
-  mapPin.style.left = mapPins.location.x - pinWidth / 2 + 'px';
-  mapPin.style.top = mapPins.location.y - pinHeight + 'px';
+  mapPin.style.left = mapPins.location.x - PIN_WIDTH / 2 + 'px';
+  mapPin.style.top = mapPins.location.y - PIN_HEIGHT + 'px';
   mapPin.querySelector('img').src = mapPins.author.avatar;
   mapPin.querySelector('img').alt = mapPins.offer.title;
 
@@ -129,9 +135,6 @@ for (var i = 0; i < mapArr.length; i++) {
   fragment.appendChild(renderPin(mapArr[i]));
 }
 mapPinList.appendChild(fragment);
-
-var filtersContainer = document.querySelector('.map__filters-container');
-var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
 
 var createNewFeatures = function (addFeatures) {
   var newFeature = document.createDocumentFragment();
@@ -146,7 +149,7 @@ var createNewFeatures = function (addFeatures) {
 
 var createNewPhotosList = function (newPhotoList) {
   var photoList = document.createDocumentFragment();
-  for (var index = 0; index < photos.length; index++) {
+  for (var index = 0; index < PHOTOS_LIST.length; index++) {
     var mapCardPhoto = document.createElement('img');
     mapCardPhoto.classList.add('popup__photo');
     mapCardPhoto.src = newPhotoList[index];
@@ -159,7 +162,6 @@ var createNewPhotosList = function (newPhotoList) {
 };
 
 var renderCard = function (mapCards) {
-
   var popupElement = templateMapCard.cloneNode(true);
 
   popupElement.querySelector('.popup__title').textContent = mapCards.offer.title;

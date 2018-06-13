@@ -29,8 +29,6 @@ var filtersContainer = document.querySelector('.map__filters-container');
 var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
 var fragment = document.createDocumentFragment();
 
-map.classList.remove('map--faded');
-
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
@@ -159,6 +157,7 @@ var renderPin = function (mapPins) {
 
   return mapPin;
 };
+map.classList.remove('map--faded');
 mapArr = createAdvertisement(8);
 for (var i = 0; i < mapArr.length; i++) {
   fragment.appendChild(renderPin(mapArr[i]));

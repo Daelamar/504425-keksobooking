@@ -105,8 +105,6 @@ var createAdvertisement = function (numbersOfAdvertisement) {
   return notices;
 };
 
-mapArr = createAdvertisement(8);
-
 var createNewFeatures = function (addFeatures) {
   var newFeature = document.createDocumentFragment();
   for (var j = 0; j < addFeatures.length; j++) {
@@ -161,7 +159,7 @@ var renderPin = function (mapPins) {
 
   return mapPin;
 };
-
+mapArr = createAdvertisement(8);
 for (var i = 0; i < mapArr.length; i++) {
   fragment.appendChild(renderPin(mapArr[i]));
 }

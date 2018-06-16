@@ -27,7 +27,16 @@ var mapPinList = document.querySelector('.map__pins');
 var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
 var filtersContainer = document.querySelector('.map__filters-container');
 var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
-var fragment = document.createDocumentFragment();
+var advertForm = document.querySelector('.ad-form');
+var advertFormField = advertForm.querySelectorAll('fieldset');
+var advertAdressInput = advertForm.querySelector('#address');
+var mapPinMain = map.querySelector('.map__pin--main');
+var mapPinMainLeft = mapPinMain.offsetLeft;
+var mapPinMainTop = mapPinMain.offsetTop;
+var mapPinMainWidth = mapPinMain.offsetWidth;
+var mapPinMainHeight = mapPinMain.offsetHeight;
+var inputAdressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
+var inputAdressTop = Math.round(mapPinMainTop + mapPinMainHeight / 2);
 
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -76,7 +85,7 @@ var createOffer = function (index) {
       avatar: 'img/avatars/user0' + (index + 1) + '.png'
     },
     offer: {
-      title: TITLE_LIST[i],
+      title: TITLE_LIST[index],
       address: locationX + ', ' + locationY,
       price: getRandomNumber(1000, 1000000),
       type: TYPE_LIST[getRandomNumber(0, TYPE_LIST.length - 1)],
@@ -128,8 +137,31 @@ var createNewPhotosList = function (newPhotoList) {
   return photoList;
 };
 
+var disabledFields = function () {
+  advertForm.classList.add('ad-form--disabled');
+
+  for (var i = 0; i < advertFormField.length; i++) {
+    advertFormField[i].disabled = true;
+  }
+};
+
+var enabledFields = function () {
+  advertForm.classList.remove('ad-form--disabled');
+
+  for (var i = 0; i < advertFormField.length; i++) {
+    advertFormField[i].disabled = false;
+  }
+};
+
 var renderCard = function (mapCards) {
   var popupElement = templateMapCard.cloneNode(true);
+
+  map.addEventListener('click', function (evt) {
+    var popupClose = map.querySelector('.popup__close');
+    if (evt.target === popupClose) {
+      closeCard();
+    }
+  });
 
   popupElement.querySelector('.popup__title').textContent = mapCards.offer.title;
   popupElement.querySelector('.popup__text--address').textContent = mapCards.offer.address;
@@ -144,7 +176,6 @@ var renderCard = function (mapCards) {
   popupElement.querySelector('.popup__photos').appendChild(createNewPhotosList(mapCards.offer.photos));
   popupElement.querySelector('.popup__avatar').src = mapCards.author.avatar;
   return popupElement;
-
 };
 
 var renderPin = function (mapPins) {
@@ -155,12 +186,49 @@ var renderPin = function (mapPins) {
   mapPin.querySelector('img').src = mapPins.author.avatar;
   mapPin.querySelector('img').alt = mapPins.offer.title;
 
+  var newCard = renderCard(mapPins);
+  mapPin.addEventListener('click', function () {
+    closeCard();
+    map.insertBefore(newCard, filtersContainer);
+  });
+  mapPin.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === 27) {
+      closeCard();
+      map.insertBefore(newCard, filtersContainer);
+    }
+  });
   return mapPin;
 };
-map.classList.remove('map--faded');
+
+var getCreatePins = function (mapPins) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < mapPins.length; i++) {
+    fragment.appendChild(renderPin(mapPins[i]));
+  }
+  mapPinList.appendChild(fragment);
+};
+
+var getEnabledPage = function () {
+  map.classList.remove('map--faded');
+
+  mapPinMainLeft = mapPinMain.offsetLeft;
+  mapPinMainTop = mapPinMain.offsetTop;
+  inputAdressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
+  inputAdressTop = Math.round(mapPinMainTop + mapPinMainHeight / 2);
+  advertAdressInput.value = inputAdressLeft + ', ' + inputAdressTop;
+
+  getCreatePins(mapArr);
+  enabledFields();
+};
+
+var closeCard = function () {
+  var oldCard = document.querySelector('.popup');
+  if (oldCard) {
+    oldCard.remove();
+  }
+};
+
+mapPinMain.addEventListener('mouseup', getEnabledPage);
+disabledFields();
 mapArr = createAdvertisement(8);
-for (var i = 0; i < mapArr.length; i++) {
-  fragment.appendChild(renderPin(mapArr[i]));
-}
-mapPinList.appendChild(fragment);
-map.insertBefore(renderCard(mapArr[0]), filtersContainer);
+

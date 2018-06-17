@@ -192,7 +192,7 @@ var createCard = function (pinElement, cardElement) {
     mapElement.insertBefore(cardElement, filtersContainerElement);
   });
   pinElement.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 27) {
+    if (evt.keyCode === 13) {
       closeCard();
       mapElement.insertBefore(cardElement, filtersContainerElement);
     }
@@ -228,7 +228,13 @@ var closeCard = function () {
 };
 
 mapElement.addEventListener('click', function (evt) {
-  if (evt.target === mapElement.querySelector('.popup__close')) {
+  if (evt.target.classList.contains('popup__close')) {
+    closeCard();
+  }
+});
+
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === 27) {
     closeCard();
   }
 });
@@ -237,4 +243,3 @@ mapPinMainElement.addEventListener('mouseup', enablePage);
 disableFields();
 offers = createAdvertisement(8);
 advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
-

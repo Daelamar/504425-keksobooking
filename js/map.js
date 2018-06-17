@@ -1,7 +1,8 @@
 'use strict';
 
-var PIN_WIDTH = 40;
-var PIN_HEIGHT = 40;
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
+var AFTER_ELEMENT_MAIN_PIN = 10;
 var TITLE_LIST = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -29,14 +30,14 @@ var filtersContainer = document.querySelector('.map__filters-container');
 var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
 var advertForm = document.querySelector('.ad-form');
 var advertFormField = advertForm.querySelectorAll('fieldset');
-var advertAdressInput = advertForm.querySelector('#address');
+var advertAddressInput = advertForm.querySelector('#address');
 var mapPinMain = map.querySelector('.map__pin--main');
 var mapPinMainLeft = mapPinMain.offsetLeft;
 var mapPinMainTop = mapPinMain.offsetTop;
 var mapPinMainWidth = mapPinMain.offsetWidth;
 var mapPinMainHeight = mapPinMain.offsetHeight;
-var inputAdressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
-var inputAdressTop = Math.round(mapPinMainTop + mapPinMainHeight / 2);
+var inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
+var inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight / 2);
 
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -145,7 +146,7 @@ var disabledFields = function () {
   }
 };
 
-var enabledFields = function () {
+var enableFields = function () {
   advertForm.classList.remove('ad-form--disabled');
 
   for (var i = 0; i < advertFormField.length; i++) {
@@ -155,13 +156,6 @@ var enabledFields = function () {
 
 var renderCard = function (mapCards) {
   var popupElement = templateMapCard.cloneNode(true);
-
-  map.addEventListener('click', function (evt) {
-    var popupClose = map.querySelector('.popup__close');
-    if (evt.target === popupClose) {
-      closeCard();
-    }
-  });
 
   popupElement.querySelector('.popup__title').textContent = mapCards.offer.title;
   popupElement.querySelector('.popup__text--address').textContent = mapCards.offer.address;
@@ -180,27 +174,38 @@ var renderCard = function (mapCards) {
 
 var renderPin = function (mapPins) {
   var mapPin = templateMapPin.cloneNode(true);
+  var newCard = renderCard(mapPins);
 
   mapPin.style.left = mapPins.location.x - PIN_WIDTH / 2 + 'px';
   mapPin.style.top = mapPins.location.y - PIN_HEIGHT + 'px';
   mapPin.querySelector('img').src = mapPins.author.avatar;
   mapPin.querySelector('img').alt = mapPins.offer.title;
 
-  var newCard = renderCard(mapPins);
-  mapPin.addEventListener('click', function () {
-    closeCard();
-    map.insertBefore(newCard, filtersContainer);
-  });
-  mapPin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 27) {
-      closeCard();
-      map.insertBefore(newCard, filtersContainer);
-    }
-  });
+  createCard(mapPin, newCard);
+
   return mapPin;
 };
 
-var getCreatePins = function (mapPins) {
+var createCard = function (element, arr) {
+  element.addEventListener('click', function () {
+    closeCard();
+    map.insertBefore(arr, filtersContainer);
+  });
+  element.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === 27) {
+      closeCard();
+      map.insertBefore(arr, filtersContainer);
+    }
+  });
+  map.addEventListener('click', function (evt) {
+    var popupClose = map.querySelector('.popup__close');
+    if (evt.target === popupClose) {
+      closeCard();
+    }
+  });
+};
+
+var createPins = function (mapPins) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < mapPins.length; i++) {
     fragment.appendChild(renderPin(mapPins[i]));
@@ -208,17 +213,17 @@ var getCreatePins = function (mapPins) {
   mapPinList.appendChild(fragment);
 };
 
-var getEnabledPage = function () {
+var enabledPage = function () {
   map.classList.remove('map--faded');
 
   mapPinMainLeft = mapPinMain.offsetLeft;
   mapPinMainTop = mapPinMain.offsetTop;
-  inputAdressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
-  inputAdressTop = Math.round(mapPinMainTop + mapPinMainHeight / 2);
-  advertAdressInput.value = inputAdressLeft + ', ' + inputAdressTop;
+  inputAddressLeft = Math.round(mapPinMainLeft - mapPinMainWidth / 2);
+  inputAddressTop = Math.round(mapPinMainTop - mapPinMainHeight - AFTER_ELEMENT_MAIN_PIN);
+  advertAddressInput.value = inputAddressLeft + ', ' + inputAddressTop;
 
-  getCreatePins(mapArr);
-  enabledFields();
+  createPins(mapArr);
+  enableFields();
 };
 
 var closeCard = function () {
@@ -228,7 +233,8 @@ var closeCard = function () {
   }
 };
 
-mapPinMain.addEventListener('mouseup', getEnabledPage);
+mapPinMain.addEventListener('mouseup', enabledPage);
 disabledFields();
 mapArr = createAdvertisement(8);
+advertAddressInput.value = inputAddressLeft + ', ' + inputAddressTop;
 

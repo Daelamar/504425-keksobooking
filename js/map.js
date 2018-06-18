@@ -2,7 +2,7 @@
 
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
-var AFTER_ELEMENT_MAIN_PIN = 10;
+var AFTER_ELEMENT_MAIN_PIN = 22;
 var TITLE_LIST = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -21,6 +21,29 @@ var PHOTOS_LIST = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
+var RENT_VALUE = {
+  flat: {
+    min: 1000,
+    max: 1000000,
+    placeholder: 1000
+  },
+  house: {
+    min: 5000,
+    max: 1000000,
+    placeholder: 5000
+  },
+  palace: {
+    min: 10000,
+    max: 1000000,
+    placeholder: 10000
+  },
+  bungalo: {
+    min: 0,
+    max: 1000000,
+    placeholder: 0
+  }
+};
+
 
 var offers;
 var mapElement = document.querySelector('.map');
@@ -28,9 +51,6 @@ var mapPinListElement = document.querySelector('.map__pins');
 var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
 var filtersContainerElement = document.querySelector('.map__filters-container');
 var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
-var advertFormElement = document.querySelector('.ad-form');
-var advertFormFieldElement = advertFormElement.querySelectorAll('fieldset');
-var advertAddressInputElement = advertFormElement.querySelector('#address');
 var mapPinMainElement = mapElement.querySelector('.map__pin--main');
 var mapPinMainLeft = mapPinMainElement.offsetLeft;
 var mapPinMainTop = mapPinMainElement.offsetTop;
@@ -38,6 +58,17 @@ var mapPinMainWidth = mapPinMainElement.offsetWidth;
 var mapPinMainHeight = mapPinMainElement.offsetHeight;
 var inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
 var inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight / 2);
+
+var advertFormElement = document.querySelector('.ad-form');
+var advertFormFieldElement = advertFormElement.querySelectorAll('fieldset');
+var advertAddressInputElement = advertFormElement.querySelector('#address');
+var inputTitleFormElement = advertFormElement.querySelector('#title');
+var inputTypeFormElement = advertFormElement.querySelector('#type');
+var inputPriceFormElement = advertFormElement.querySelector('#price');
+var inputTimeInFormElement = advertFormElement.querySelector('#timein');
+var inputTimeOutFormElement = advertFormElement.querySelector('#timeout');
+var inputRoomsNumFormElement = advertFormElement.querySelector('#room_number');
+var inputCapacityFormElement = advertFormElement.querySelector('#capacity');
 
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -218,6 +249,8 @@ var enablePage = function () {
 
   createPins(offers);
   enableFields();
+  requiredFields();
+  minAndMaxLength();
 };
 
 var closeCard = function () {
@@ -227,11 +260,59 @@ var closeCard = function () {
   }
 };
 
-mapElement.addEventListener('click', function (evt) {
-  if (evt.target.classList.contains('popup__close')) {
-    closeCard();
+var requiredFields = function () {
+  advertAddressInputElement.setAttribute('readonly', '');
+  inputTitleFormElement.setAttribute('required', '');
+  inputPriceFormElement.setAttribute('required', '');
+};
+
+var minAndMaxLength = function () {
+  inputTitleFormElement.setAttribute('minlength', '30');
+  inputTitleFormElement.setAttribute('maxlength', '100');
+};
+
+var switchPrice = function () {
+  switch (inputTypeFormElement.value) {
+    case 'flat':
+      inputPriceFormElement.min = RENT_VALUE.flat.min;
+      inputPriceFormElement.max = RENT_VALUE.flat.max;
+      inputPriceFormElement.placeholder = RENT_VALUE.flat.placeholder;
+      return;
+    case 'bungalo':
+      inputPriceFormElement.min = RENT_VALUE.bungalo.min;
+      inputPriceFormElement.max = RENT_VALUE.bungalo.max;
+      inputPriceFormElement.placeholder = RENT_VALUE.bungalo.placeholder;
+      return;
+    case 'house':
+      inputPriceFormElement.min = RENT_VALUE.house.min;
+      inputPriceFormElement.max = RENT_VALUE.house.max;
+      inputPriceFormElement.placeholder = RENT_VALUE.house.placeholder;
+      return;
+    case 'palace':
+      inputPriceFormElement.min = RENT_VALUE.palace.min;
+      inputPriceFormElement.max = RENT_VALUE.palace.max;
+      inputPriceFormElement.placeholder = RENT_VALUE.palace.placeholder;
+      return;
   }
-});
+};
+
+var switchRoomsAndGuests = function () {
+  if ((inputRoomsNumFormElement.value === '1') && (inputCapacityFormElement.value !== '1')) {
+    inputCapacityFormElement.setCustomValidity('Одна комната только для одного гостя!');
+  } else if ((inputRoomsNumFormElement.value === '2') && (inputCapacityFormElement.value !== '1') && (inputCapacityFormElement.value !== '2')) {
+    inputCapacityFormElement.setCustomValidity('Две комнаты только для одного или двух гостей!');
+  } else if ((inputRoomsNumFormElement.value === '100') && (inputCapacityFormElement.value !== '0')) {
+    inputCapacityFormElement.setCustomValidity('Не для гостей!');
+  } else {
+    inputCapacityFormElement.setCustomValidity('');
+  }
+};
+
+var switchTime = function (target, value) {
+  target.value = value.value;
+};
+
+
 
 document.addEventListener('keydown', function (evt) {
   if (evt.keyCode === 27) {
@@ -239,7 +320,30 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
+inputTypeFormElement.addEventListener('change', switchPrice);
+inputTimeInFormElement.addEventListener('change', function () {
+  switchTime(inputTimeOutFormElement, inputTimeInFormElement);
+});
+
+inputTimeOutFormElement.addEventListener('change', function () {
+  switchTime(inputTimeInFormElement, inputTimeOutFormElement);
+});
+
+inputRoomsNumFormElement.addEventListener('change', function () {
+  switchRoomsAndGuests();
+});
+
+inputCapacityFormElement.addEventListener('change', function () {
+  switchRoomsAndGuests();
+});
+
+mapElement.addEventListener('click', function (evt) {
+  if (evt.target.classList.contains('popup__close')) {
+    closeCard();
+  }
+});
 mapPinMainElement.addEventListener('mouseup', enablePage);
 disableFields();
+
 offers = createAdvertisement(8);
 advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;

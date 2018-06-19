@@ -267,44 +267,18 @@ var setFieldsRequired = function () {
 };
 
 var setMinAndMaxLength = function () {
-  inputTitleFormElement.setAttribute('minlength', '30');
-  inputTitleFormElement.setAttribute('maxlength', '100');
-};
-/*
-var setPrice = function () {
-  switch (inputTypeFormElement.value) {
-    case 'flat':
-      inputPriceFormElement.min = RENT_VALUE.flat.min;
-      inputPriceFormElement.max = RENT_VALUE.flat.max;
-      inputPriceFormElement.placeholder = RENT_VALUE.flat.placeholder;
-      return;
-    case 'bungalo':
-      inputPriceFormElement.min = RENT_VALUE.bungalo.min;
-      inputPriceFormElement.max = RENT_VALUE.bungalo.max;
-      inputPriceFormElement.placeholder = RENT_VALUE.bungalo.placeholder;
-      return;
-    case 'house':
-      inputPriceFormElement.min = RENT_VALUE.house.min;
-      inputPriceFormElement.max = RENT_VALUE.house.max;
-      inputPriceFormElement.placeholder = RENT_VALUE.house.placeholder;
-      return;
-    case 'palace':
-      inputPriceFormElement.min = RENT_VALUE.palace.min;
-      inputPriceFormElement.max = RENT_VALUE.palace.max;
-      inputPriceFormElement.placeholder = RENT_VALUE.palace.placeholder;
-      return;
-  }
-};
-*/
-
-var setPrice = function () {
-  var indexElement = inputTypeFormElement.value;
-  inputPriceFormElement.min = RENT_VALUE[indexElement].min;
-  inputPriceFormElement.max = RENT_VALUE[indexElement].max;
-  inputPriceFormElement.placeholder = RENT_VALUE[indexElement].placeholder;
+  inputTitleFormElement.minLength = 30;
+  inputTitleFormElement.maxLength = 100;
 };
 
-var setRoomsAndGuests = function () {
+var setPrice = function () {
+  var offerType = inputTypeFormElement.value;
+  inputPriceFormElement.min = RENT_VALUE[offerType].min;
+  inputPriceFormElement.max = RENT_VALUE[offerType].max;
+  inputPriceFormElement.placeholder = RENT_VALUE[offerType].placeholder;
+};
+
+var checkRoomsAndGuests = function () {
   if ((inputRoomsNumFormElement.value === '1') && (inputCapacityFormElement.value !== '1')) {
     inputCapacityFormElement.setCustomValidity('Одна комната только для одного гостя!');
   } else if ((inputRoomsNumFormElement.value === '2') && (inputCapacityFormElement.value !== '1') && (inputCapacityFormElement.value !== '2')) {
@@ -336,9 +310,9 @@ inputTimeOutFormElement.addEventListener('change', function () {
   setTime(inputTimeInFormElement, inputTimeOutFormElement);
 });
 
-inputRoomsNumFormElement.addEventListener('change', setRoomsAndGuests);
+inputRoomsNumFormElement.addEventListener('change', checkRoomsAndGuests);
 
-inputCapacityFormElement.addEventListener('change', setRoomsAndGuests);
+inputCapacityFormElement.addEventListener('change', checkRoomsAndGuests);
 
 mapElement.addEventListener('click', function (evt) {
   if (evt.target.classList.contains('popup__close')) {

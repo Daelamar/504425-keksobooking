@@ -249,8 +249,8 @@ var enablePage = function () {
 
   createPins(offers);
   enableFields();
-  requiredFields();
-  minAndMaxLength();
+  setFieldsRequired();
+  setMinAndMaxLength();
 };
 
 var closeCard = function () {
@@ -260,18 +260,18 @@ var closeCard = function () {
   }
 };
 
-var requiredFields = function () {
-  advertAddressInputElement.setAttribute('readonly', '');
-  inputTitleFormElement.setAttribute('required', '');
-  inputPriceFormElement.setAttribute('required', '');
+var setFieldsRequired = function () {
+  advertAddressInputElement.readOnly = true;
+  inputTitleFormElement.required = true;
+  inputPriceFormElement.required = true;
 };
 
-var minAndMaxLength = function () {
+var setMinAndMaxLength = function () {
   inputTitleFormElement.setAttribute('minlength', '30');
   inputTitleFormElement.setAttribute('maxlength', '100');
 };
 
-var switchPrice = function () {
+var setPrice = function () {
   switch (inputTypeFormElement.value) {
     case 'flat':
       inputPriceFormElement.min = RENT_VALUE.flat.min;
@@ -296,7 +296,7 @@ var switchPrice = function () {
   }
 };
 
-var switchRoomsAndGuests = function () {
+var setRoomsAndGuests = function () {
   if ((inputRoomsNumFormElement.value === '1') && (inputCapacityFormElement.value !== '1')) {
     inputCapacityFormElement.setCustomValidity('Одна комната только для одного гостя!');
   } else if ((inputRoomsNumFormElement.value === '2') && (inputCapacityFormElement.value !== '1') && (inputCapacityFormElement.value !== '2')) {
@@ -308,10 +308,9 @@ var switchRoomsAndGuests = function () {
   }
 };
 
-var switchTime = function (target, value) {
-  target.value = value.value;
+var setTime = function (targetElement, mainElement) {
+  targetElement.value = mainElement.value;
 };
-
 
 
 document.addEventListener('keydown', function (evt) {
@@ -320,21 +319,21 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
-inputTypeFormElement.addEventListener('change', switchPrice);
+inputTypeFormElement.addEventListener('change', setPrice);
 inputTimeInFormElement.addEventListener('change', function () {
-  switchTime(inputTimeOutFormElement, inputTimeInFormElement);
+  setTime(inputTimeOutFormElement, inputTimeInFormElement);
 });
 
 inputTimeOutFormElement.addEventListener('change', function () {
-  switchTime(inputTimeInFormElement, inputTimeOutFormElement);
+  setTime(inputTimeInFormElement, inputTimeOutFormElement);
 });
 
 inputRoomsNumFormElement.addEventListener('change', function () {
-  switchRoomsAndGuests();
+  setRoomsAndGuests();
 });
 
 inputCapacityFormElement.addEventListener('change', function () {
-  switchRoomsAndGuests();
+  setRoomsAndGuests();
 });
 
 mapElement.addEventListener('click', function (evt) {

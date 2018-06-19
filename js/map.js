@@ -261,7 +261,7 @@ var closeCard = function () {
 };
 
 var setFieldsRequired = function () {
-  advertAddressInputElement.readOnly = true;
+  advertAddressInputElement.readonly = true;
   inputTitleFormElement.required = true;
   inputPriceFormElement.required = true;
 };
@@ -270,7 +270,7 @@ var setMinAndMaxLength = function () {
   inputTitleFormElement.setAttribute('minlength', '30');
   inputTitleFormElement.setAttribute('maxlength', '100');
 };
-
+/*
 var setPrice = function () {
   switch (inputTypeFormElement.value) {
     case 'flat':
@@ -294,6 +294,14 @@ var setPrice = function () {
       inputPriceFormElement.placeholder = RENT_VALUE.palace.placeholder;
       return;
   }
+};
+*/
+
+var setPrice = function () {
+  var indexElement = inputTypeFormElement.value;
+  inputPriceFormElement.min = RENT_VALUE[indexElement].min;
+  inputPriceFormElement.max = RENT_VALUE[indexElement].max;
+  inputPriceFormElement.placeholder = RENT_VALUE[indexElement].placeholder;
 };
 
 var setRoomsAndGuests = function () {
@@ -328,13 +336,9 @@ inputTimeOutFormElement.addEventListener('change', function () {
   setTime(inputTimeInFormElement, inputTimeOutFormElement);
 });
 
-inputRoomsNumFormElement.addEventListener('change', function () {
-  setRoomsAndGuests();
-});
+inputRoomsNumFormElement.addEventListener('change', setRoomsAndGuests);
 
-inputCapacityFormElement.addEventListener('change', function () {
-  setRoomsAndGuests();
-});
+inputCapacityFormElement.addEventListener('change', setRoomsAndGuests);
 
 mapElement.addEventListener('click', function (evt) {
   if (evt.target.classList.contains('popup__close')) {

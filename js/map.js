@@ -2,7 +2,7 @@
 
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
-var AFTER_ELEMENT_MAIN_PIN = 10;
+var AFTER_ELEMENT_MAIN_PIN = 22;
 var TITLE_LIST = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -21,6 +21,29 @@ var PHOTOS_LIST = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
+var RENT_VALUE = {
+  flat: {
+    min: 1000,
+    max: 1000000,
+    placeholder: 1000
+  },
+  house: {
+    min: 5000,
+    max: 1000000,
+    placeholder: 5000
+  },
+  palace: {
+    min: 10000,
+    max: 1000000,
+    placeholder: 10000
+  },
+  bungalo: {
+    min: 0,
+    max: 1000000,
+    placeholder: 0
+  }
+};
+
 
 var offers;
 var mapElement = document.querySelector('.map');
@@ -28,9 +51,6 @@ var mapPinListElement = document.querySelector('.map__pins');
 var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
 var filtersContainerElement = document.querySelector('.map__filters-container');
 var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
-var advertFormElement = document.querySelector('.ad-form');
-var advertFormFieldElement = advertFormElement.querySelectorAll('fieldset');
-var advertAddressInputElement = advertFormElement.querySelector('#address');
 var mapPinMainElement = mapElement.querySelector('.map__pin--main');
 var mapPinMainLeft = mapPinMainElement.offsetLeft;
 var mapPinMainTop = mapPinMainElement.offsetTop;
@@ -38,6 +58,17 @@ var mapPinMainWidth = mapPinMainElement.offsetWidth;
 var mapPinMainHeight = mapPinMainElement.offsetHeight;
 var inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
 var inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight / 2);
+
+var advertFormElement = document.querySelector('.ad-form');
+var advertFormFieldElement = advertFormElement.querySelectorAll('fieldset');
+var advertAddressInputElement = advertFormElement.querySelector('#address');
+var inputTitleFormElement = advertFormElement.querySelector('#title');
+var inputTypeFormElement = advertFormElement.querySelector('#type');
+var inputPriceFormElement = advertFormElement.querySelector('#price');
+var inputTimeInFormElement = advertFormElement.querySelector('#timein');
+var inputTimeOutFormElement = advertFormElement.querySelector('#timeout');
+var inputRoomsNumFormElement = advertFormElement.querySelector('#room_number');
+var inputCapacityFormElement = advertFormElement.querySelector('#capacity');
 
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -152,6 +183,8 @@ var enableFields = function () {
   for (var i = 0; i < advertFormFieldElement.length; i++) {
     advertFormFieldElement[i].disabled = false;
   }
+  checkRoomsAndGuests();
+  setPrice();
 };
 
 var renderCard = function (mapCards) {
@@ -218,6 +251,8 @@ var enablePage = function () {
 
   createPins(offers);
   enableFields();
+  setFieldsRequired();
+  setMinAndMaxLength();
 };
 
 var closeCard = function () {
@@ -227,11 +262,40 @@ var closeCard = function () {
   }
 };
 
-mapElement.addEventListener('click', function (evt) {
-  if (evt.target.classList.contains('popup__close')) {
-    closeCard();
+var setFieldsRequired = function () {
+  advertAddressInputElement.readonly = true;
+  inputTitleFormElement.required = true;
+  inputPriceFormElement.required = true;
+};
+
+var setMinAndMaxLength = function () {
+  inputTitleFormElement.minLength = 30;
+  inputTitleFormElement.maxLength = 100;
+};
+
+var setPrice = function () {
+  var offerType = inputTypeFormElement.value;
+  inputPriceFormElement.min = RENT_VALUE[offerType].min;
+  inputPriceFormElement.max = RENT_VALUE[offerType].max;
+  inputPriceFormElement.placeholder = RENT_VALUE[offerType].placeholder;
+};
+
+var checkRoomsAndGuests = function () {
+  if ((inputRoomsNumFormElement.value === '100') && (inputCapacityFormElement.value !== '0')) {
+    inputCapacityFormElement.setCustomValidity('Не для гостей!');
+  } else if ((inputRoomsNumFormElement.value !== '100') && (inputCapacityFormElement.value === '0')) {
+    inputCapacityFormElement.setCustomValidity('Выберите корректный вариант!');
+  } else if (inputRoomsNumFormElement.value < inputCapacityFormElement.value) {
+    inputCapacityFormElement.setCustomValidity('Недостаточное кол-во комнат для размещения гостей');
+  } else {
+    inputCapacityFormElement.setCustomValidity('');
   }
-});
+};
+
+var setTime = function (targetElement, mainElement) {
+  targetElement.value = mainElement.value;
+};
+
 
 document.addEventListener('keydown', function (evt) {
   if (evt.keyCode === 27) {
@@ -239,7 +303,26 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
+inputTypeFormElement.addEventListener('change', setPrice);
+inputTimeInFormElement.addEventListener('change', function () {
+  setTime(inputTimeOutFormElement, inputTimeInFormElement);
+});
+
+inputTimeOutFormElement.addEventListener('change', function () {
+  setTime(inputTimeInFormElement, inputTimeOutFormElement);
+});
+
+inputRoomsNumFormElement.addEventListener('change', checkRoomsAndGuests);
+
+inputCapacityFormElement.addEventListener('change', checkRoomsAndGuests);
+
+mapElement.addEventListener('click', function (evt) {
+  if (evt.target.classList.contains('popup__close')) {
+    closeCard();
+  }
+});
 mapPinMainElement.addEventListener('mouseup', enablePage);
 disableFields();
+
 offers = createAdvertisement(8);
 advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;

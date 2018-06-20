@@ -279,14 +279,12 @@ var setPrice = function () {
 };
 
 var checkRoomsAndGuests = function () {
-  if ((inputRoomsNumFormElement.value === '1') && (inputCapacityFormElement.value !== '1')) {
-    inputCapacityFormElement.setCustomValidity('Одна комната только для одного гостя!');
-  } else if ((inputRoomsNumFormElement.value === '2') && (inputCapacityFormElement.value !== '1') && (inputCapacityFormElement.value !== '2')) {
-    inputCapacityFormElement.setCustomValidity('Две комнаты только для одного или двух гостей!');
+  if ((inputRoomsNumFormElement.value === inputCapacityFormElement.value) || (inputRoomsNumFormElement.value > inputCapacityFormElement.value)) {
+    inputCapacityFormElement.setCustomValidity('');
   } else if ((inputRoomsNumFormElement.value === '100') && (inputCapacityFormElement.value !== '0')) {
     inputCapacityFormElement.setCustomValidity('Не для гостей!');
   } else {
-    inputCapacityFormElement.setCustomValidity('');
+    inputCapacityFormElement.setCustomValidity('Недостаточное кол-во комнат для размещения гостей');
   }
 };
 

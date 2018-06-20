@@ -183,6 +183,7 @@ var enableFields = function () {
   for (var i = 0; i < advertFormFieldElement.length; i++) {
     advertFormFieldElement[i].disabled = false;
   }
+  checkRoomsAndGuests();
 };
 
 var renderCard = function (mapCards) {
@@ -279,10 +280,10 @@ var setPrice = function () {
 };
 
 var checkRoomsAndGuests = function () {
-  if ((inputRoomsNumFormElement.value === inputCapacityFormElement.value) || (inputRoomsNumFormElement.value > inputCapacityFormElement.value)) {
-    inputCapacityFormElement.setCustomValidity('');
-  } else if ((inputRoomsNumFormElement.value === '100') && (inputCapacityFormElement.value !== '0')) {
+  if ((inputRoomsNumFormElement.value === '100') && (inputCapacityFormElement.value !== '0')) {
     inputCapacityFormElement.setCustomValidity('Не для гостей!');
+  } else if (inputRoomsNumFormElement.value >= inputCapacityFormElement.value) {
+    inputCapacityFormElement.setCustomValidity('');
   } else {
     inputCapacityFormElement.setCustomValidity('Недостаточное кол-во комнат для размещения гостей');
   }

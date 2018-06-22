@@ -258,6 +258,8 @@ var enablePage = function () {
   enableFields();
   setFieldsRequired();
   setMinAndMaxLength();
+
+  mapPinMainElement.removeEventListener('mousedown', enablePage);
 };
 
 var closeCard = function () {
@@ -309,6 +311,7 @@ document.addEventListener('keydown', function (evt) {
 });
 
 inputTypeFormElement.addEventListener('change', setPrice);
+
 inputTimeInFormElement.addEventListener('change', function () {
   setTime(inputTimeOutFormElement, inputTimeInFormElement);
 });
@@ -326,7 +329,9 @@ mapElement.addEventListener('click', function (evt) {
     closeCard();
   }
 });
+
 mapPinMainElement.addEventListener('mouseup', enablePage);
+
 disableFields();
 
 mapPinMainElement.addEventListener('mousedown', function (evt) {
@@ -339,6 +344,12 @@ mapPinMainElement.addEventListener('mousedown', function (evt) {
 
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
+
+    mapPinMainLeft = mapPinMainElement.offsetLeft;
+    mapPinMainTop = mapPinMainElement.offsetTop;
+    inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
+    inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + AFTER_ELEMENT_MAIN_PIN);
+    advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
 
     var shift = {
       x: startCoords.x - moveEvt.clientX,

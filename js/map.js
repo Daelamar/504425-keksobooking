@@ -2,7 +2,7 @@
 
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
-var AFTER_ELEMENT_MAIN_PIN = 22;
+var AFTER_ELEMENT_MAIN_PIN = 20;
 var TITLE_LIST = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',

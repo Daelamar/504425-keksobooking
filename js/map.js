@@ -259,7 +259,7 @@ var enablePage = function () {
   setFieldsRequired();
   setMinAndMaxLength();
 
-  mapPinMainElement.removeEventListener('mousedown', enablePage);
+  mapPinMainElement.removeEventListener('mouseup', enablePage);
 };
 
 var closeCard = function () {

@@ -44,8 +44,8 @@ var RENT_VALUE = {
   }
 };
 var PIN_MAP_RESTRICTION = {
-  coordsMinY: 130,
-  coordsMaxY: 630,
+  coordsMinY: 129,
+  coordsMaxY: 631,
   coordsMinX: 0,
   coordsMaxX: 1140
 };
@@ -361,7 +361,7 @@ mapPinMainElement.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY
     };
 
-    if ((mapPinMainElement.offsetTop - shift.y) > PIN_MAP_RESTRICTION.coordsMinY && (mapPinMainElement.offsetTop - shift.y) < PIN_MAP_RESTRICTION.coordsMaxY) {
+    if ((mapPinMainElement.offsetTop - shift.y) > (PIN_MAP_RESTRICTION.coordsMinY - mapPinMainHeight - AFTER_ELEMENT_MAIN_PIN) && (mapPinMainElement.offsetTop - shift.y) < (PIN_MAP_RESTRICTION.coordsMaxY - mapPinMainHeight - AFTER_ELEMENT_MAIN_PIN)) {
       mapPinMainElement.style.top = (mapPinMainElement.offsetTop - shift.y) + 'px';
     }
     if ((mapPinMainElement.offsetLeft - shift.x) > PIN_MAP_RESTRICTION.coordsMinX && (mapPinMainElement.offsetLeft - shift.x) < PIN_MAP_RESTRICTION.coordsMaxX) {

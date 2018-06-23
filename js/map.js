@@ -44,8 +44,8 @@ var RENT_VALUE = {
   }
 };
 var PIN_MAP_RESTRICTION = {
-  coordsMinY: 129,
-  coordsMaxY: 631,
+  coordsMinY: 130,
+  coordsMaxY: 630,
   coordsMinX: 0,
   coordsMaxX: 1140
 };

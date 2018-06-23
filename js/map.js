@@ -2,7 +2,7 @@
 
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
-var AFTER_ELEMENT_MAIN_PIN = 22;
+var AFTER_ELEMENT_MAIN_PIN = 20;
 var TITLE_LIST = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -43,7 +43,12 @@ var RENT_VALUE = {
     placeholder: 0
   }
 };
-
+var PIN_MAP_RESTRICTION = {
+  coordsMinY: 130,
+  coordsMaxY: 630,
+  coordsMinX: 0,
+  coordsMaxX: 1140
+};
 
 var offers;
 var mapElement = document.querySelector('.map');
@@ -245,14 +250,16 @@ var enablePage = function () {
 
   mapPinMainLeft = mapPinMainElement.offsetLeft;
   mapPinMainTop = mapPinMainElement.offsetTop;
-  inputAddressLeft = Math.round(mapPinMainLeft - mapPinMainWidth / 2);
-  inputAddressTop = Math.round(mapPinMainTop - mapPinMainHeight - AFTER_ELEMENT_MAIN_PIN);
+  inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
+  inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + AFTER_ELEMENT_MAIN_PIN);
   advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
 
   createPins(offers);
   enableFields();
   setFieldsRequired();
   setMinAndMaxLength();
+
+  mapPinMainElement.removeEventListener('mouseup', enablePage);
 };
 
 var closeCard = function () {
@@ -304,6 +311,7 @@ document.addEventListener('keydown', function (evt) {
 });
 
 inputTypeFormElement.addEventListener('change', setPrice);
+
 inputTimeInFormElement.addEventListener('change', function () {
   setTime(inputTimeOutFormElement, inputTimeInFormElement);
 });
@@ -321,8 +329,67 @@ mapElement.addEventListener('click', function (evt) {
     closeCard();
   }
 });
+
 mapPinMainElement.addEventListener('mouseup', enablePage);
+
 disableFields();
+
+mapPinMainElement.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    mapPinMainLeft = mapPinMainElement.offsetLeft;
+    mapPinMainTop = mapPinMainElement.offsetTop;
+    inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
+    inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + AFTER_ELEMENT_MAIN_PIN);
+    advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    if ((mapPinMainElement.offsetTop - shift.y) > (PIN_MAP_RESTRICTION.coordsMinY - mapPinMainHeight - AFTER_ELEMENT_MAIN_PIN) && (mapPinMainElement.offsetTop - shift.y) < (PIN_MAP_RESTRICTION.coordsMaxY - mapPinMainHeight - AFTER_ELEMENT_MAIN_PIN)) {
+      mapPinMainElement.style.top = (mapPinMainElement.offsetTop - shift.y) + 'px';
+    }
+    if ((mapPinMainElement.offsetLeft - shift.x) > PIN_MAP_RESTRICTION.coordsMinX && (mapPinMainElement.offsetLeft - shift.x) < PIN_MAP_RESTRICTION.coordsMaxX) {
+      mapPinMainElement.style.left = (mapPinMainElement.offsetLeft - shift.x) + 'px';
+    }
+  };
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - upEvt.clientX,
+      y: startCoords.y - upEvt.clientY
+    };
+
+    startCoords = {
+      x: upEvt.clientX,
+      y: upEvt.clientY
+    };
+    mapPinMainElement.style.top = (mapPinMainElement.offsetTop - shift.y) + 'px';
+    mapPinMainElement.style.left = (mapPinMainElement.offsetLeft - shift.x) + 'px';
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
 
 offers = createAdvertisement(8);
 advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;

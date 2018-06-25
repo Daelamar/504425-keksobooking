@@ -16,10 +16,8 @@
   var mapPinMainHeight = mapPinMainElement.offsetHeight;
   var inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
   var inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight / 2);
-
-  window.mainPin = {
-    AFTER_ELEMENT_MAIN_PIN: 20
-  };
+  var advertFormElement = document.querySelector('.ad-form');
+  var advertAddressInputElement = advertFormElement.querySelector('#address');
 
   mapPinMainElement.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -32,11 +30,12 @@
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
 
+      var errorValue = 1;
       mapPinMainLeft = mapPinMainElement.offsetLeft;
       mapPinMainTop = mapPinMainElement.offsetTop;
       inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
       inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT_MAIN_PIN);
-      window.form.advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
+      advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
 
       var shift = {
         x: startCoords.x - moveEvt.clientX,
@@ -48,7 +47,7 @@
         y: moveEvt.clientY
       };
 
-      if ((mapPinMainElement.offsetTop - shift.y) > (PIN_MAP_RESTRICTION.coordsMinY - mapPinMainHeight - window.mainPin.AFTER_ELEMENT_MAIN_PIN) && (mapPinMainElement.offsetTop - shift.y) < (PIN_MAP_RESTRICTION.coordsMaxY - mapPinMainHeight - window.mainPin.AFTER_ELEMENT_MAIN_PIN)) {
+      if ((mapPinMainElement.offsetTop - shift.y) > (PIN_MAP_RESTRICTION.coordsMinY - mapPinMainHeight - window.mainPin.AFTER_ELEMENT_MAIN_PIN - errorValue) && (mapPinMainElement.offsetTop - shift.y) < (PIN_MAP_RESTRICTION.coordsMaxY - mapPinMainHeight - window.mainPin.AFTER_ELEMENT_MAIN_PIN + errorValue)) {
         mapPinMainElement.style.top = (mapPinMainElement.offsetTop - shift.y) + 'px';
       }
       if ((mapPinMainElement.offsetLeft - shift.x) > PIN_MAP_RESTRICTION.coordsMinX && (mapPinMainElement.offsetLeft - shift.x) < PIN_MAP_RESTRICTION.coordsMaxX) {
@@ -77,4 +76,8 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  window.mainPin = {
+    AFTER_ELEMENT_MAIN_PIN: 20
+  };
 })();

@@ -25,6 +25,12 @@
   };
   var mapElement = document.querySelector('.map');
   var mapPinMainElement = mapElement.querySelector('.map__pin--main');
+  var mapPinMainLeft = mapPinMainElement.offsetLeft;
+  var mapPinMainTop = mapPinMainElement.offsetTop;
+  var mapPinMainWidth = mapPinMainElement.offsetWidth;
+  var mapPinMainHeight = mapPinMainElement.offsetHeight;
+  var inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
+  var inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight / 2);
   var advertFormElement = document.querySelector('.ad-form');
   var advertFormFieldElement = advertFormElement.querySelectorAll('fieldset');
   var inputTitleFormElement = advertFormElement.querySelector('#title');
@@ -35,6 +41,7 @@
   var inputRoomsNumFormElement = advertFormElement.querySelector('#room_number');
   var inputCapacityFormElement = advertFormElement.querySelector('#capacity');
   var formResetButtonElement = advertFormElement.querySelector('.ad-form__reset');
+  var advertAddressInputElement = advertFormElement.querySelector('#address');
 
   var setPrice = function () {
     var offerType = inputTypeFormElement.value;
@@ -57,28 +64,22 @@
     targetElement.value = mainElement.value;
   };
   var resetForm = function () {
-    var mapPinMainLeft = mapPinMainElement.offsetLeft;
-    var mapPinMainTop = mapPinMainElement.offsetTop;
-    var mapPinMainWidth = mapPinMainElement.offsetWidth;
-    var mapPinMainHeight = mapPinMainElement.offsetHeight;
-    var inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
-    var inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight / 2);
     advertFormElement.reset();
-    window.form.disableFields();
-    mapElement.classList.add('map--faded');
     mapPinMainElement.style.top = 375 + 'px';
     mapPinMainElement.style.left = 570 + 'px';
-    window.creatingCards.closeCard();
-    window.creatingPins.deletePins();
-    window.form.advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
-    mapPinMainElement.addEventListener('mouseup', window.initMap.enablePage);
+    window.form.disableFields();
+    advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
+    mapElement.classList.add('map--faded');
+    window.cards.closeCard();
+    window.pins.deletePins();
+
+    mapPinMainElement.addEventListener('mouseup', window.map.enablePage);
   };
 
   window.form = {
-    advertAddressInputElement: advertFormElement.querySelector('#address'),
 
     setFieldsRequired: function () {
-      window.form.advertAddressInputElement.readonly = true;
+      advertAddressInputElement.readonly = true;
       inputTitleFormElement.required = true;
       inputPriceFormElement.required = true;
     },

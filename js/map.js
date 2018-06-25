@@ -9,7 +9,7 @@
   var mapPinMainWidth = mapPinMainElement.offsetWidth;
   var mapPinMainHeight = mapPinMainElement.offsetHeight;
   var inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
-  var inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight /2);
+  var inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight / 2);
   var advertFormElement = document.querySelector('.ad-form');
   var advertAddressInputElement = advertFormElement.querySelector('#address');
 
@@ -17,7 +17,7 @@
     enablePage: function () {
       inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT_MAIN_PIN);
       mapElement.classList.remove('map--faded');
-      window.pins.createPins(offers);
+      window.pin.create(offers);
       window.form.enableFields();
       window.form.setFieldsRequired();
       window.form.setMinAndMaxLength();

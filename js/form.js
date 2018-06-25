@@ -70,14 +70,13 @@
     window.form.disableFields();
     advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
     mapElement.classList.add('map--faded');
-    window.cards.closeCard();
-    window.pins.deletePins();
+    window.card.close();
+    window.pin.delete();
 
     mapPinMainElement.addEventListener('mouseup', window.map.enablePage);
   };
 
   window.form = {
-
     setFieldsRequired: function () {
       advertAddressInputElement.readonly = true;
       inputTitleFormElement.required = true;

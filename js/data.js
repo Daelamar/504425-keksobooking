@@ -55,31 +55,6 @@
         notices.push(createOffer(i));
       }
       return notices;
-    },
-
-    createFeatures: function (addFeatures) {
-      var newFeature = document.createDocumentFragment();
-      for (var j = 0; j < addFeatures.length; j++) {
-        var newLi = document.createElement('li');
-        newLi.classList.add('popup__feature');
-        newLi.classList.add('popup__feature--' + addFeatures[j]);
-        newFeature.appendChild(newLi);
-      }
-      return newFeature;
-    },
-
-    createPhotosList: function (newPhotoList) {
-      var photoList = document.createDocumentFragment();
-      for (var index = 0; index < PHOTOS_LIST.length; index++) {
-        var mapCardPhoto = document.createElement('img');
-        mapCardPhoto.classList.add('popup__photo');
-        mapCardPhoto.src = newPhotoList[index];
-        mapCardPhoto.width = '45';
-        mapCardPhoto.height = '40';
-        mapCardPhoto.alt = 'Фотография жилья';
-        photoList.appendChild(mapCardPhoto);
-      }
-      return photoList;
     }
   };
 })();

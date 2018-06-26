@@ -34,19 +34,6 @@
       showCard(mapPinElement, newCardElement);
 
       return mapPinElement;
-    },
-    create: function (mapPins) {
-      var fragment = document.createDocumentFragment();
-      for (var i = 0; i < mapPins.length; i++) {
-        fragment.appendChild(window.pin.render(mapPins[i]));
-      }
-      window.pin.mapPinListElement.appendChild(fragment);
-    },
-    delete: function () {
-      var pinElement = window.pin.mapPinListElement.querySelectorAll('.map__pin');
-      for (var i = 1; i < pinElement.length; i++) {
-        window.pin.mapPinListElement.removeChild(pinElement[i]);
-      }
     }
   };
 })();

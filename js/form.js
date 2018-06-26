@@ -71,7 +71,7 @@
     advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
     mapElement.classList.add('map--faded');
     window.card.close();
-    window.pin.delete();
+    window.map.deletePin();
 
     mapPinMainElement.addEventListener('mouseup', window.map.enablePage);
   };

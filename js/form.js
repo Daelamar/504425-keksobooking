@@ -67,7 +67,7 @@
     advertFormElement.reset();
     mapPinMainElement.style.top = 375 + 'px';
     mapPinMainElement.style.left = 570 + 'px';
-    window.form.disableFields();
+    disableFields();
     advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
     mapElement.classList.add('map--faded');
     window.card.close();
@@ -75,17 +75,29 @@
 
     mapPinMainElement.addEventListener('mouseup', window.map.enablePage);
   };
+  var setFieldsRequired = function () {
+    advertAddressInputElement.readonly = true;
+    inputTitleFormElement.required = true;
+    inputPriceFormElement.required = true;
+  };
+  var setMinAndMaxLength = function () {
+    inputTitleFormElement.minLength = 30;
+    inputTitleFormElement.maxLength = 100;
+  };
+
+  var disableFields = function () {
+    advertFormElement.classList.add('ad-form--disabled');
+
+    for (var i = 0; i < advertFormFieldElement.length; i++) {
+      advertFormFieldElement[i].disabled = true;
+    }
+  };
+  var enableForm = function () {
+    setFieldsRequired();
+    setMinAndMaxLength();
+  };
 
   window.form = {
-    setFieldsRequired: function () {
-      advertAddressInputElement.readonly = true;
-      inputTitleFormElement.required = true;
-      inputPriceFormElement.required = true;
-    },
-    setMinAndMaxLength: function () {
-      inputTitleFormElement.minLength = 30;
-      inputTitleFormElement.maxLength = 100;
-    },
     enableFields: function () {
       advertFormElement.classList.remove('ad-form--disabled');
 
@@ -94,36 +106,19 @@
       }
       checkRoomsAndGuests();
       setPrice();
-    },
-    disableFields: function () {
-      advertFormElement.classList.add('ad-form--disabled');
-
-      for (var i = 0; i < advertFormFieldElement.length; i++) {
-        advertFormFieldElement[i].disabled = true;
-      }
-    },
-    enableForm: function () {
-      window.form.setFieldsRequired();
-      window.form.setMinAndMaxLength();
     }
-
   };
 
   inputTypeFormElement.addEventListener('change', setPrice);
-
   inputTimeInFormElement.addEventListener('change', function () {
     setTime(inputTimeOutFormElement, inputTimeInFormElement);
   });
-
   inputTimeOutFormElement.addEventListener('change', function () {
     setTime(inputTimeInFormElement, inputTimeOutFormElement);
   });
-
   inputRoomsNumFormElement.addEventListener('change', checkRoomsAndGuests);
-
   inputCapacityFormElement.addEventListener('change', checkRoomsAndGuests);
-
   formResetButtonElement.addEventListener('click', resetForm);
-  window.form.disableFields();
-  window.form.enableForm();
+  disableFields();
+  enableForm();
 })();

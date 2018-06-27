@@ -101,7 +101,12 @@
       for (var i = 0; i < advertFormFieldElement.length; i++) {
         advertFormFieldElement[i].disabled = true;
       }
+    },
+    enableForm: function () {
+      window.form.setFieldsRequired();
+      window.form.setMinAndMaxLength();
     }
+
   };
 
   inputTypeFormElement.addEventListener('change', setPrice);

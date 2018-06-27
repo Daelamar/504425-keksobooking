@@ -40,8 +40,7 @@
 
   mapPinMainElement.addEventListener('mouseup', window.map.enablePage);
   window.form.disableFields();
-  window.form.setFieldsRequired();
-  window.form.setMinAndMaxLength();
+  window.form.enableForm();
   offers = window.data.createAdvertisement(8);
   advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
 })();

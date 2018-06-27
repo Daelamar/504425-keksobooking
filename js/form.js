@@ -124,4 +124,6 @@
   inputCapacityFormElement.addEventListener('change', checkRoomsAndGuests);
 
   formResetButtonElement.addEventListener('click', resetForm);
+  window.form.disableFields();
+  window.form.enableForm();
 })();

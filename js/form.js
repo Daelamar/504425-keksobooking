@@ -72,8 +72,6 @@
     mapElement.classList.add('map--faded');
     window.card.close();
     window.map.deletePin();
-
-    mapPinMainElement.addEventListener('mouseup', window.map.enablePage);
   };
   var setFieldsRequired = function () {
     advertAddressInputElement.readonly = true;
@@ -84,7 +82,6 @@
     inputTitleFormElement.minLength = 30;
     inputTitleFormElement.maxLength = 100;
   };
-
   var disableFields = function () {
     advertFormElement.classList.add('ad-form--disabled');
 
@@ -95,6 +92,16 @@
   var enableForm = function () {
     setFieldsRequired();
     setMinAndMaxLength();
+  };
+  var onSuccessForm = function () {
+    var successWindow = document.querySelector('.success');
+    successWindow.classList.remove('hidden');
+    resetForm();
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === 27) {
+        successWindow.classList.add('hidden');
+      }
+    });
   };
 
   window.form = {
@@ -119,6 +126,10 @@
   inputRoomsNumFormElement.addEventListener('change', checkRoomsAndGuests);
   inputCapacityFormElement.addEventListener('change', checkRoomsAndGuests);
   formResetButtonElement.addEventListener('click', resetForm);
+  advertFormElement.addEventListener('submit', function (evt) {
+    window.backend.upload(new FormData(advertFormElement), onSuccessForm, window.utils.onError);
+    evt.preventDefault();
+  });
   disableFields();
   enableForm();
 })();

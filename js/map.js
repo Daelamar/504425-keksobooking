@@ -15,12 +15,12 @@
   var advertAddressInputElement = advertFormElement.querySelector('#address');
 
   var createPins = function (data) {
+    offers = data.slice();
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < OFFERS_COUNT; i++) {
-      fragment.appendChild(window.pin.render(data[i]));
+      fragment.appendChild(window.pin.render(offers[i]));
     }
     window.pin.mapPinListElement.appendChild(fragment);
-    offers = data.slice();
   };
 
   window.map = {
@@ -28,23 +28,28 @@
       inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT_MAIN_PIN);
       mapElement.classList.remove('map--faded');
       window.form.enableFields();
-      createPins(offers);
       advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
-      mapPinMainElement.removeEventListener('mouseup', window.map.enablePage);
-      if (advertFormElement) {
-        advertFormElement.addEventListener('reset', function () {
-          mapPinMainElement.addEventListener('mouseup', window.map.enablePage);
-        });
-      }
+      mapPinMainElement.removeEventListener('mouseup', window.map.onUserPinClick);
+      // if (advertFormElement) {
+      //   advertFormElement.addEventListener('reset', function () {
+      //     createPins();
+      //   });
+      // }
     },
     deletePin: function () {
       var pinElement = window.pin.mapPinListElement.querySelectorAll('.map__pin');
       for (var i = 1; i < pinElement.length; i++) {
         window.pin.mapPinListElement.removeChild(pinElement[i]);
       }
+    },
+    onUserPinClick: function () {
+      if (offers.length === 0) {
+        window.backend.download(createPins, window.utils.onError);
+      }
+      window.map.enablePage();
     }
   };
-  window.backend.download(createPins, window.utils.onError);
-  mapPinMainElement.addEventListener('mouseup', window.map.enablePage);
+
+  mapPinMainElement.addEventListener('mouseup', window.map.onUserPinClick);
   advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
 })();

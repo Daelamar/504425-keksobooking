@@ -72,6 +72,7 @@
     mapElement.classList.add('map--faded');
     window.card.close();
     window.map.deletePin();
+    mapPinMainElement.addEventListener('mouseup', window.map.onUserPinClick);
   };
   var setFieldsRequired = function () {
     advertAddressInputElement.readonly = true;
@@ -94,7 +95,7 @@
     setMinAndMaxLength();
   };
   var onUploadSuccess = function () {
-    var successMessageElement = document.querySelector('.SUCCESS');
+    var successMessageElement = document.querySelector('.success');
     successMessageElement.classList.remove('hidden');
     resetForm();
     document.addEventListener('keydown', function (evt) {

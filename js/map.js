@@ -15,6 +15,7 @@
   var advertAddressInputElement = advertFormElement.querySelector('#address');
 
   var createPins = function (mapPins) {
+
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < OFFERS_COUNT; i++) {
       fragment.appendChild(window.pin.render(mapPins[i]));
@@ -24,7 +25,9 @@
 
   window.map = {
     enablePage: function (data) {
-      offers = data.slice();
+      if (data) {
+        offers = data.slice();
+      }
       inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT_MAIN_PIN);
       mapElement.classList.remove('map--faded');
       window.form.enableFields();
@@ -41,11 +44,11 @@
     onUserPinClick: function () {
       if (offers.length === 0) {
         window.backend.download(window.map.enablePage, window.utils.onError);
+      } else {
+        window.map.enablePage();
       }
-      window.map.enablePage();
     }
   };
 
-  //mapPinMainElement.addEventListener('mouseup', window.map.onUserPinClick);
   advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
 })();

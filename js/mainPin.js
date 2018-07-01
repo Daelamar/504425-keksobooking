@@ -18,7 +18,9 @@
   var inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight / 2);
   var advertFormElement = document.querySelector('.ad-form');
   var advertAddressInputElement = advertFormElement.querySelector('#address');
-
+  var attachEvents = function () {
+    mapPinMainElement.addEventListener('mouseup', window.map.onUserPinClick);
+  };
   mapPinMainElement.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
@@ -79,10 +81,8 @@
 
   window.mainPin = {
     AFTER_ELEMENT_MAIN_PIN: 20,
-    onClick: function () {
-      mapPinMainElement.addEventListener('mouseup', window.map.onUserPinClick);
-    }
+    attachEvents: attachEvents
   };
 
-  mapPinMainElement.addEventListener('mouseup', window.map.onUserPinClick);
+  attachEvents();
 })();

@@ -93,13 +93,13 @@
     setFieldsRequired();
     setMinAndMaxLength();
   };
-  var onSuccessForm = function () {
-    var successWindow = document.querySelector('.success');
-    successWindow.classList.remove('hidden');
+  var onUploadSuccess = function () {
+    var successMessageElement = document.querySelector('.SUCCESS');
+    successMessageElement.classList.remove('hidden');
     resetForm();
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === 27) {
-        successWindow.classList.add('hidden');
+        successMessageElement.classList.add('hidden');
       }
     });
   };
@@ -127,7 +127,7 @@
   inputCapacityFormElement.addEventListener('change', checkRoomsAndGuests);
   formResetButtonElement.addEventListener('click', resetForm);
   advertFormElement.addEventListener('submit', function (evt) {
-    window.backend.upload(new FormData(advertFormElement), onSuccessForm, window.utils.onError);
+    window.backend.upload(new FormData(advertFormElement), onUploadSuccess, window.utils.onError);
     evt.preventDefault();
   });
   disableFields();

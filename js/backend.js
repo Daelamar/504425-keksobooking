@@ -2,14 +2,14 @@
 
 (function () {
   var URL_UPLOAD = 'https://js.dump.academy/keksobookin';
-  var URL_DOWNLOAD = 'https://js.dump.academy/keksobooking/daa';
+  var URL_DOWNLOAD = 'https://js.dump.academy/keksobooking/data';
   var TIMEOUT = 10000;
-  var SERVER_CODES = {
-    success: 200,
-    badRequest: 400,
-    forbidden: 403,
-    notFound: 404,
-    internalServerError: 500
+  var ServerCodes = {
+    SUCCESS: 200,
+    BAD_REQUEST: 400,
+    FORBIDDEN: 403,
+    NOT_FOUND: 404,
+    INTERNAL_SERVER_ERROR: 500
   };
 
   window.backend = {
@@ -19,19 +19,19 @@
 
       xhr.addEventListener('load', function () {
         switch (xhr.status) {
-          case SERVER_CODES.success:
+          case ServerCodes.SUCCESS:
             onSuccess(xhr.response);
             break;
-          case SERVER_CODES.badRequest:
+          case ServerCodes.BAD_REQUEST:
             onError('Ошибка : ' + xhr.status + ' , некорректный запрос!');
             break;
-          case SERVER_CODES.forbidden:
+          case ServerCodes.FORBIDDEN:
             onError('Ошибка : ' + xhr.status + ' , отказано в доступе!');
             break;
-          case SERVER_CODES.notFound:
+          case ServerCodes.NOT_FOUND:
             onError('Ошибка : ' + xhr.status + ' , cтраница не найдена!');
             break;
-          case SERVER_CODES.internalServerError:
+          case ServerCodes.INTERNAL_SERVER_ERROR:
             onError('Ошибка : ' + xhr.status + ' , внутренняя ошибка сервера!');
             break;
           default:
@@ -61,19 +61,19 @@
 
       xhr.addEventListener('load', function () {
         switch (xhr.status) {
-          case SERVER_CODES.success:
+          case ServerCodes.SUCCESS:
             onSuccess(xhr.response);
             break;
-          case SERVER_CODES.badRequest:
+          case ServerCodes.BAD_REQUEST:
             onError('Ошибка : ' + xhr.status + ' , некорректный запрос!');
             break;
-          case SERVER_CODES.forbidden:
+          case ServerCodes.FORBIDDEN:
             onError('Ошибка : ' + xhr.status + ' , отказано в доступе!');
             break;
-          case SERVER_CODES.notFound:
+          case ServerCodes.NOT_FOUND:
             onError('Ошибка : ' + xhr.status + ' , cтраница не найдена!');
             break;
-          case SERVER_CODES.internalServerError:
+          case ServerCodes.INTERNAL_SERVER_ERROR:
             onError('Ошибка : ' + xhr.status + ' , внутренняя ошибка сервера!');
             break;
           default:

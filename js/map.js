@@ -14,12 +14,13 @@
   var advertFormElement = document.querySelector('.ad-form');
   var advertAddressInputElement = advertFormElement.querySelector('#address');
 
-  var createPin = function (mapPins) {
+  var createPins = function (data) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < OFFERS_COUNT; i++) {
-      fragment.appendChild(window.pin.render(mapPins[i]));
+      fragment.appendChild(window.pin.render(data[i]));
     }
     window.pin.mapPinListElement.appendChild(fragment);
+    offers = data.slice();
   };
 
   window.map = {
@@ -27,29 +28,23 @@
       inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT_MAIN_PIN);
       mapElement.classList.remove('map--faded');
       window.form.enableFields();
+      createPins(offers);
       advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
-      mapPinMainElement.removeEventListener('mouseup', window.map.onUserPinClick);
+      mapPinMainElement.removeEventListener('mouseup', window.map.enablePage);
+      if (advertFormElement) {
+        advertFormElement.addEventListener('reset', function () {
+          mapPinMainElement.addEventListener('mouseup', window.map.enablePage);
+        });
+      }
     },
     deletePin: function () {
       var pinElement = window.pin.mapPinListElement.querySelectorAll('.map__pin');
       for (var i = 1; i < pinElement.length; i++) {
         window.pin.mapPinListElement.removeChild(pinElement[i]);
       }
-    },
-    downloadPins: function (data) {
-      offers = data.slice();
-      createPin(offers);
-    },
-    onUserPinClick: function () {
-      window.backend.download(window.map.downloadPins, window.utils.onError);
-      window.map.enablePage();
-      if (advertFormElement) {
-        advertFormElement.addEventListener('reset', function () {
-          mapPinMainElement.addEventListener('mouseup', window.map.onUserPinClick);
-        });
-      }
     }
   };
-  mapPinMainElement.addEventListener('mouseup', window.map.onUserPinClick);
+  window.backend.download(createPins, window.utils.onError);
+  mapPinMainElement.addEventListener('mouseup', window.map.enablePage);
   advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
 })();

@@ -14,11 +14,10 @@
   var advertFormElement = document.querySelector('.ad-form');
   var advertAddressInputElement = advertFormElement.querySelector('#address');
 
-  var createPins = function (offers) {
-    //offers = data.slice();
+  var createPins = function (mapPins) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < OFFERS_COUNT; i++) {
-      fragment.appendChild(window.pin.render(offers[i]));
+      fragment.appendChild(window.pin.render(mapPins[i]));
     }
     window.pin.mapPinListElement.appendChild(fragment);
   };
@@ -32,11 +31,6 @@
       createPins(offers);
       advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
       mapPinMainElement.removeEventListener('mouseup', window.map.onUserPinClick);
-      // if (advertFormElement) {
-      //   advertFormElement.addEventListener('reset', function () {
-      //     createPins();
-      //   });
-      // }
     },
     deletePin: function () {
       var pinElement = window.pin.mapPinListElement.querySelectorAll('.map__pin');
@@ -52,6 +46,6 @@
     }
   };
 
-  mapPinMainElement.addEventListener('mouseup', window.map.onUserPinClick);
+  //mapPinMainElement.addEventListener('mouseup', window.map.onUserPinClick);
   advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
 })();

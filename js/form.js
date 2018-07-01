@@ -72,7 +72,7 @@
     mapElement.classList.add('map--faded');
     window.card.close();
     window.map.deletePin();
-    mapPinMainElement.addEventListener('mouseup', window.map.enablePage);
+    mapPinMainElement.addEventListener('mouseup', window.mainPin.onClick);
   };
   var setFieldsRequired = function () {
     advertAddressInputElement.readonly = true;

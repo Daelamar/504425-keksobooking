@@ -78,6 +78,11 @@
   });
 
   window.mainPin = {
-    AFTER_ELEMENT_MAIN_PIN: 20
+    AFTER_ELEMENT_MAIN_PIN: 20,
+    onClick: function () {
+      mapPinMainElement.addEventListener('mouseup', window.map.onUserPinClick);
+    }
   };
+
+  mapPinMainElement.addEventListener('mouseup', window.map.onUserPinClick);
 })();

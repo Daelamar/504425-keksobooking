@@ -42,6 +42,7 @@
   var inputCapacityFormElement = advertFormElement.querySelector('#capacity');
   var formResetButtonElement = advertFormElement.querySelector('.ad-form__reset');
   var advertAddressInputElement = advertFormElement.querySelector('#address');
+  var successMessageElement = document.querySelector('.success');
 
   var setPrice = function () {
     var offerType = inputTypeFormElement.value;
@@ -95,9 +96,11 @@
     setMinAndMaxLength();
   };
   var onUploadSuccess = function () {
-    var successMessageElement = document.querySelector('.success');
     successMessageElement.classList.remove('hidden');
     resetForm();
+    successMessageElement.addEventListener('click', function () {
+      successMessageElement.classList.add('hidden');
+    });
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === 27) {
         successMessageElement.classList.add('hidden');
@@ -130,6 +133,14 @@
   advertFormElement.addEventListener('submit', function (evt) {
     window.backend.upload(new FormData(advertFormElement), onUploadSuccess, window.utils.onError);
     evt.preventDefault();
+    document.removeEventListener('keydown', function () {
+      if (evt.keyCode === 27) {
+        successMessageElement.classList.add('hidden');
+      }
+    });
+    successMessageElement.removeEventListener('click', function () {
+      successMessageElement.classList.add('hidden');
+    });
   });
   disableFields();
   enableForm();

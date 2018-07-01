@@ -12,7 +12,7 @@
     INTERNAL_SERVER_ERROR: 500
   };
 
-  var httpRequest = function (onSuccess, onError) {
+  var setupHttpRequest = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -50,13 +50,13 @@
 
   window.backend = {
     upload: function (data, onSuccess, onError) {
-      var xhr = httpRequest(onSuccess, onError);
+      var xhr = setupHttpRequest(onSuccess, onError);
 
       xhr.open('POST', URL_UPLOAD);
       xhr.send(data);
     },
     download: function (onSuccess, onError) {
-      var xhr = httpRequest(onSuccess, onError);
+      var xhr = setupHttpRequest(onSuccess, onError);
 
       xhr.open('GET', URL_DOWNLOAD);
       xhr.send();

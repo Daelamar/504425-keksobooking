@@ -14,8 +14,8 @@
   var advertFormElement = document.querySelector('.ad-form');
   var advertAddressInputElement = advertFormElement.querySelector('#address');
 
-  var createPins = function (data) {
-    offers = data.slice();
+  var createPins = function (offers) {
+    //offers = data.slice();
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < OFFERS_COUNT; i++) {
       fragment.appendChild(window.pin.render(offers[i]));
@@ -24,10 +24,12 @@
   };
 
   window.map = {
-    enablePage: function () {
+    enablePage: function (data) {
+      offers = data.slice();
       inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT_MAIN_PIN);
       mapElement.classList.remove('map--faded');
       window.form.enableFields();
+      createPins(offers);
       advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
       mapPinMainElement.removeEventListener('mouseup', window.map.onUserPinClick);
       // if (advertFormElement) {
@@ -44,7 +46,7 @@
     },
     onUserPinClick: function () {
       if (offers.length === 0) {
-        window.backend.download(createPins, window.utils.onError);
+        window.backend.download(window.map.enablePage, window.utils.onError);
       }
       window.map.enablePage();
     }

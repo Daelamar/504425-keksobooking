@@ -98,17 +98,15 @@
   var onUploadSuccess = function () {
     successMessageElement.classList.remove('hidden');
     resetForm();
-    hideSuccessMessageHandler();
-  };
-  var hideSuccessMessageHandler = function () {
     successMessageElement.addEventListener('click', function () {
       successMessageElement.classList.add('hidden');
     });
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === 27) {
-        successMessageElement.classList.add('hidden');
-      }
-    });
+    document.addEventListener('keydown', hideSuccessMessageHandler);
+  };
+  var hideSuccessMessageHandler = function (evt) {
+    if (evt.keyCode === 27) {
+      successMessageElement.classList.add('hidden');
+    }
   };
   window.form = {
     enableFields: function () {

@@ -42,6 +42,7 @@
   var inputCapacityFormElement = advertFormElement.querySelector('#capacity');
   var formResetButtonElement = advertFormElement.querySelector('.ad-form__reset');
   var advertAddressInputElement = advertFormElement.querySelector('#address');
+  var successMessageElement = document.querySelector('.success');
 
   var setPrice = function () {
     var offerType = inputTypeFormElement.value;
@@ -72,8 +73,7 @@
     mapElement.classList.add('map--faded');
     window.card.close();
     window.map.deletePin();
-
-    mapPinMainElement.addEventListener('mouseup', window.map.enablePage);
+    window.mainPin.attachEvents();
   };
   var setFieldsRequired = function () {
     advertAddressInputElement.readonly = true;
@@ -84,7 +84,6 @@
     inputTitleFormElement.minLength = 30;
     inputTitleFormElement.maxLength = 100;
   };
-
   var disableFields = function () {
     advertFormElement.classList.add('ad-form--disabled');
 
@@ -96,7 +95,19 @@
     setFieldsRequired();
     setMinAndMaxLength();
   };
-
+  var onUploadSuccess = function () {
+    successMessageElement.classList.remove('hidden');
+    resetForm();
+    successMessageElement.addEventListener('click', function () {
+      successMessageElement.classList.add('hidden');
+    });
+    document.addEventListener('keydown', onDocumentKeydown);
+  };
+  var onDocumentKeydown = function (evt) {
+    if (evt.keyCode === 27) {
+      successMessageElement.classList.add('hidden');
+    }
+  };
   window.form = {
     enableFields: function () {
       advertFormElement.classList.remove('ad-form--disabled');
@@ -119,6 +130,11 @@
   inputRoomsNumFormElement.addEventListener('change', checkRoomsAndGuests);
   inputCapacityFormElement.addEventListener('change', checkRoomsAndGuests);
   formResetButtonElement.addEventListener('click', resetForm);
+  advertFormElement.addEventListener('submit', function (evt) {
+    window.backend.upload(new FormData(advertFormElement), onUploadSuccess, window.utils.onError);
+    evt.preventDefault();
+    document.removeEventListener('keydown', onDocumentKeydown);
+  });
   disableFields();
   enableForm();
 })();

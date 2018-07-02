@@ -98,6 +98,9 @@
   var onUploadSuccess = function () {
     successMessageElement.classList.remove('hidden');
     resetForm();
+    hideSuccessMessageHandler();
+  };
+  var hideSuccessMessageHandler = function () {
     successMessageElement.addEventListener('click', function () {
       successMessageElement.classList.add('hidden');
     });
@@ -107,7 +110,6 @@
       }
     });
   };
-
   window.form = {
     enableFields: function () {
       advertFormElement.classList.remove('ad-form--disabled');
@@ -133,14 +135,7 @@
   advertFormElement.addEventListener('submit', function (evt) {
     window.backend.upload(new FormData(advertFormElement), onUploadSuccess, window.utils.onError);
     evt.preventDefault();
-    document.removeEventListener('keydown', function () {
-      if (evt.keyCode === 27) {
-        successMessageElement.classList.add('hidden');
-      }
-    });
-    successMessageElement.removeEventListener('click', function () {
-      successMessageElement.classList.add('hidden');
-    });
+    document.removeEventListener('keydown', hideSuccessMessageHandler);
   });
   disableFields();
   enableForm();

@@ -101,9 +101,9 @@
     successMessageElement.addEventListener('click', function () {
       successMessageElement.classList.add('hidden');
     });
-    document.addEventListener('keydown', hideSuccessMessageHandler);
+    document.addEventListener('keydown', onDocumentKeydown);
   };
-  var hideSuccessMessageHandler = function (evt) {
+  var onDocumentKeydown = function (evt) {
     if (evt.keyCode === 27) {
       successMessageElement.classList.add('hidden');
     }
@@ -133,7 +133,7 @@
   advertFormElement.addEventListener('submit', function (evt) {
     window.backend.upload(new FormData(advertFormElement), onUploadSuccess, window.utils.onError);
     evt.preventDefault();
-    document.removeEventListener('keydown', hideSuccessMessageHandler);
+    document.removeEventListener('keydown', onDocumentKeydown);
   });
   disableFields();
   enableForm();

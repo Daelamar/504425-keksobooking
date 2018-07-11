@@ -49,7 +49,6 @@
     render: function (mapCards) {
       var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
       var popupElement = templateMapCard.cloneNode(true);
-
       popupElement.querySelector('.popup__title').textContent = mapCards.offer.title;
       popupElement.querySelector('.popup__text--address').textContent = mapCards.offer.address;
       popupElement.querySelector('.popup__text--price').textContent = mapCards.offer.price + ' ₽/ночь.';

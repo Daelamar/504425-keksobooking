@@ -44,10 +44,12 @@
   var formResetButtonElement = advertFormElement.querySelector('.ad-form__reset');
   var advertAddressInputElement = advertFormElement.querySelector('#address');
   var successMessageElement = document.querySelector('.success');
-  var avatarFileChooser = document.querySelector('#avatar');
-  var previewAvatar = document.querySelector('.ad-form-header__avatar-image');
-  var imageFileChooser = document.querySelector('#images');
-  var imageField = document.querySelector('.ad-form__photo');
+  var avatarFileChooserElement = document.querySelector('#avatar');
+  var previewAvatarElement = document.querySelector('.ad-form-header__avatar-image');
+  var imageFileChooserElement = document.querySelector('#images');
+  var imageFieldElement = document.querySelector('.ad-form__photo');
+  var matches;
+  var file;
 
   var setPrice = function () {
     var offerType = inputTypeFormElement.value;
@@ -70,10 +72,13 @@
     targetElement.value = mainElement.value;
   };
   var deleteUserImages = function () {
-    var userImage = imageField.querySelectorAll('.ad-form__photo-user_image');
+    var userImage = imageFieldElement.querySelectorAll('.ad-form__photo-user_image');
     for (var i = 0; i < userImage.length; i++) {
-      imageField.removeChild(userImage[i]);
+      imageFieldElement.removeChild(userImage[i]);
     }
+  };
+  var deleteUserAvatar = function () {
+    previewAvatarElement.src = 'img/muffin-grey.svg';
   };
   var resetForm = function () {
     advertFormElement.reset();
@@ -86,6 +91,7 @@
     window.map.deletePin();
     window.mainPin.attachEvents();
     deleteUserImages();
+    deleteUserAvatar();
   };
   var setFieldsRequired = function () {
     advertAddressInputElement.readonly = true;
@@ -120,6 +126,13 @@
       successMessageElement.classList.add('hidden');
     }
   };
+  var fileTypeChecked = function (FileChooserElement) {
+    file = FileChooserElement.files[0];
+    var fileName = file.name.toLowerCase();
+    matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+  };
   window.form = {
     enableFields: function () {
       advertFormElement.classList.remove('ad-form--disabled');
@@ -147,39 +160,31 @@
     evt.preventDefault();
     document.removeEventListener('keydown', onDocumentKeydown);
   });
-  avatarFileChooser.addEventListener('change', function () {
-    var file = avatarFileChooser.files[0];
-    var fileName = file.name.toLowerCase();
-    var matches = FILE_TYPES.some(function (it) {
-      return fileName.endsWith(it);
-    });
+  avatarFileChooserElement.addEventListener('change', function () {
+    fileTypeChecked(avatarFileChooserElement);
     if (matches) {
       var reader = new FileReader();
       reader.addEventListener('load', function () {
-        previewAvatar.src = reader.result;
+        previewAvatarElement.src = reader.result;
       });
 
       reader.readAsDataURL(file);
     }
   });
-  imageFileChooser.addEventListener('change', function () {
-    var image = imageFileChooser.files[0];
-    var imageName = image.name.toLowerCase();
-    var matches = FILE_TYPES.some(function (it) {
-      return imageName.endsWith(it);
-    });
+  imageFileChooserElement.addEventListener('change', function () {
+    fileTypeChecked(imageFileChooserElement);
     if (matches) {
       var reader = new FileReader();
       var newImage = document.createElement('img');
-      imageField.style = 'display: flex';
+      imageFieldElement.style = 'display: flex';
       newImage.classList.add('ad-form__photo-user_image');
-      imageField.appendChild(newImage);
+      imageFieldElement.appendChild(newImage);
       newImage.width = 70;
       reader.addEventListener('load', function () {
         newImage.src = reader.result;
       });
 
-      reader.readAsDataURL(image);
+      reader.readAsDataURL(file);
     }
   });
   disableFields();

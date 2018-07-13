@@ -129,10 +129,9 @@
   var fileTypeChecked = function (fileChooserElement) {
     file = fileChooserElement.files[0];
     var fileName = file.name.toLowerCase();
-    matches = FILE_TYPES.some(function (it) {
+    return FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
     });
-    return matches;
   };
   window.form = {
     enableFields: function () {

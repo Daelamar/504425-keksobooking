@@ -126,12 +126,13 @@
       successMessageElement.classList.add('hidden');
     }
   };
-  var fileTypeChecked = function (FileChooserElement) {
-    file = FileChooserElement.files[0];
+  var fileTypeChecked = function (fileChooserElement) {
+    file = fileChooserElement.files[0];
     var fileName = file.name.toLowerCase();
     matches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
     });
+    return matches;
   };
   window.form = {
     enableFields: function () {
@@ -161,8 +162,7 @@
     document.removeEventListener('keydown', onDocumentKeydown);
   });
   avatarFileChooserElement.addEventListener('change', function () {
-    fileTypeChecked(avatarFileChooserElement);
-    if (matches) {
+    if (fileTypeChecked(avatarFileChooserElement)) {
       var reader = new FileReader();
       reader.addEventListener('load', function () {
         previewAvatarElement.src = reader.result;
@@ -172,8 +172,7 @@
     }
   });
   imageFileChooserElement.addEventListener('change', function () {
-    fileTypeChecked(imageFileChooserElement);
-    if (matches) {
+    if (fileTypeChecked(imageFileChooserElement)) {
       var reader = new FileReader();
       var newImage = document.createElement('img');
       imageFieldElement.style = 'display: flex';

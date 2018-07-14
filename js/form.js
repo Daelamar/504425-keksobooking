@@ -48,7 +48,6 @@
   var previewAvatarElement = document.querySelector('.ad-form-header__avatar-image');
   var imageFileChooserElement = document.querySelector('#images');
   var imageFieldElement = document.querySelector('.ad-form__photo');
-  var matches;
   var file;
 
   var setPrice = function () {

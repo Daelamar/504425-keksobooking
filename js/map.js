@@ -2,7 +2,6 @@
 
 (function () {
   var OFFERS_COUNT = 5;
-  var offers = [];
   var mapElement = document.querySelector('.map');
   var mapPinMainElement = mapElement.querySelector('.map__pin--main');
   var mapPinMainLeft = mapPinMainElement.offsetLeft;
@@ -14,26 +13,27 @@
   var advertFormElement = document.querySelector('.ad-form');
   var advertAddressInputElement = advertFormElement.querySelector('#address');
 
-  var createPins = function (mapPins) {
-
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < OFFERS_COUNT; i++) {
-      fragment.appendChild(window.pin.render(mapPins[i]));
+  var enablePage = function (data) {
+    if (data) {
+      window.map.offers = data.slice();
     }
-    window.pin.mapPinListElement.appendChild(fragment);
+    inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT_MAIN_PIN);
+    mapElement.classList.remove('map--faded');
+    window.form.enableFields();
+    window.map.createPins(window.map.offers);
+    advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
+    mapPinMainElement.removeEventListener('mouseup', window.map.onUserPinClick);
   };
 
   window.map = {
-    enablePage: function (data) {
-      if (data) {
-        offers = data.slice();
+    offers: [],
+    createPins: function (mapPins) {
+      var fragment = document.createDocumentFragment();
+      var pinsArrayLengthCalc = (mapPins.length > OFFERS_COUNT) ? OFFERS_COUNT : mapPins.length;
+      for (var i = 0; i < pinsArrayLengthCalc; i++) {
+        fragment.appendChild(window.pin.render(mapPins[i]));
       }
-      inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT_MAIN_PIN);
-      mapElement.classList.remove('map--faded');
-      window.form.enableFields();
-      createPins(offers);
-      advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
-      mapPinMainElement.removeEventListener('mouseup', window.map.onUserPinClick);
+      window.pin.mapPinListElement.appendChild(fragment);
     },
     deletePin: function () {
       var pinElement = window.pin.mapPinListElement.querySelectorAll('.map__pin');
@@ -42,10 +42,10 @@
       }
     },
     onUserPinClick: function () {
-      if (offers.length === 0) {
-        window.backend.download(window.map.enablePage, window.utils.onError);
+      if (window.map.offers.length === 0) {
+        window.backend.download(enablePage, window.utils.onError);
       } else {
-        window.map.enablePage();
+        enablePage();
       }
     }
   };

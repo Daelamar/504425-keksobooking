@@ -1,7 +1,9 @@
 'use strict';
 
 (function () {
+  var DEBOUNCE_INTERVAL = 500;
   var errorElement = document.createElement('div');
+  var lastTimeout;
   var hideErrorMessage = function () {
     setTimeout(function () {
       errorElement.remove();
@@ -45,6 +47,12 @@
         }
       });
       hideErrorMessage();
+    },
+    debounce: function (action) {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(action, DEBOUNCE_INTERVAL);
     }
   };
 })();

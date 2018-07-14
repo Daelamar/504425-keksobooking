@@ -23,6 +23,7 @@
       placeholder: 0
     }
   };
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var mapElement = document.querySelector('.map');
   var mapPinMainElement = mapElement.querySelector('.map__pin--main');
   var mapPinMainLeft = mapPinMainElement.offsetLeft;
@@ -43,6 +44,11 @@
   var formResetButtonElement = advertFormElement.querySelector('.ad-form__reset');
   var advertAddressInputElement = advertFormElement.querySelector('#address');
   var successMessageElement = document.querySelector('.success');
+  var avatarFileChooserElement = document.querySelector('#avatar');
+  var previewAvatarElement = document.querySelector('.ad-form-header__avatar-image');
+  var imageFileChooserElement = document.querySelector('#images');
+  var imageFieldElement = document.querySelector('.ad-form__photo');
+  var file;
 
   var setPrice = function () {
     var offerType = inputTypeFormElement.value;
@@ -64,6 +70,15 @@
   var setTime = function (targetElement, mainElement) {
     targetElement.value = mainElement.value;
   };
+  var deleteUserImages = function () {
+    var userImage = imageFieldElement.querySelectorAll('.ad-form__photo-user_image');
+    for (var i = 0; i < userImage.length; i++) {
+      imageFieldElement.removeChild(userImage[i]);
+    }
+  };
+  var deleteUserAvatar = function () {
+    previewAvatarElement.src = 'img/muffin-grey.svg';
+  };
   var resetForm = function () {
     advertFormElement.reset();
     mapPinMainElement.style.top = 375 + 'px';
@@ -74,6 +89,8 @@
     window.card.close();
     window.map.deletePin();
     window.mainPin.attachEvents();
+    deleteUserImages();
+    deleteUserAvatar();
   };
   var setFieldsRequired = function () {
     advertAddressInputElement.readonly = true;
@@ -108,6 +125,13 @@
       successMessageElement.classList.add('hidden');
     }
   };
+  var fileTypeChecked = function (fileChooserElement) {
+    file = fileChooserElement.files[0];
+    var fileName = file.name.toLowerCase();
+    return FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+  };
   window.form = {
     enableFields: function () {
       advertFormElement.classList.remove('ad-form--disabled');
@@ -134,6 +158,31 @@
     window.backend.upload(new FormData(advertFormElement), onUploadSuccess, window.utils.onError);
     evt.preventDefault();
     document.removeEventListener('keydown', onDocumentKeydown);
+  });
+  avatarFileChooserElement.addEventListener('change', function () {
+    if (fileTypeChecked(avatarFileChooserElement)) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        previewAvatarElement.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+    }
+  });
+  imageFileChooserElement.addEventListener('change', function () {
+    if (fileTypeChecked(imageFileChooserElement)) {
+      var reader = new FileReader();
+      var newImage = document.createElement('img');
+      imageFieldElement.style = 'display: flex';
+      newImage.classList.add('ad-form__photo-user_image');
+      imageFieldElement.appendChild(newImage);
+      newImage.width = 70;
+      reader.addEventListener('load', function () {
+        newImage.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+    }
   });
   disableFields();
   enableForm();

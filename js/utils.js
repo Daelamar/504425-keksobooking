@@ -10,6 +10,7 @@
     }, 5000);
   };
   window.utils = {
+    KEY_CODE_ESC: 27,
     onError: function (errorMessage) {
       errorElement.classList.add('error-massage');
       errorElement.style.backgroundColor = 'white';
@@ -37,8 +38,7 @@
         window.clearTimeout(lastTimeout);
       }
       lastTimeout = window.setTimeout(action, DEBOUNCE_INTERVAL);
-    },
-    KEY_CODE_ESC: 27
+    }
   };
 })();
 

@@ -37,7 +37,8 @@
         window.clearTimeout(lastTimeout);
       }
       lastTimeout = window.setTimeout(action, DEBOUNCE_INTERVAL);
-    }
+    },
+    KEY_CODE_ESC: 27
   };
 })();
 

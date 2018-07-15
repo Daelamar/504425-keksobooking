@@ -36,7 +36,7 @@
       mapPinMainLeft = mapPinMainElement.offsetLeft;
       mapPinMainTop = mapPinMainElement.offsetTop;
       inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
-      inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT);
+      inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT_GAP);
       advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
 
       var shift = {
@@ -49,7 +49,7 @@
         y: moveEvt.clientY
       };
 
-      if ((mapPinMainElement.offsetTop - shift.y) > (PinMapRestriction.COORDS_MIN_Y - mapPinMainHeight - window.mainPin.AFTER_ELEMENT - errorValue) && (mapPinMainElement.offsetTop - shift.y) < (PinMapRestriction.COORDS_MAX_Y - mapPinMainHeight - window.mainPin.AFTER_ELEMENT + errorValue)) {
+      if ((mapPinMainElement.offsetTop - shift.y) > (PinMapRestriction.COORDS_MIN_Y - mapPinMainHeight - window.mainPin.AFTER_ELEMENT_GAP - errorValue) && (mapPinMainElement.offsetTop - shift.y) < (PinMapRestriction.COORDS_MAX_Y - mapPinMainHeight - window.mainPin.AFTER_ELEMENT_GAP + errorValue)) {
         mapPinMainElement.style.top = (mapPinMainElement.offsetTop - shift.y) + 'px';
       }
       if ((mapPinMainElement.offsetLeft - shift.x) > PinMapRestriction.COORDS_MIN_X && (mapPinMainElement.offsetLeft - shift.x) < PinMapRestriction.COORDS_MAX_X) {
@@ -80,7 +80,7 @@
   });
 
   window.mainPin = {
-    AFTER_ELEMENT: 20,
+    AFTER_ELEMENT_GAP: 20,
     attachEvents: attachEvents
   };
 

@@ -17,7 +17,7 @@
     if (data) {
       window.map.offers = data.slice();
     }
-    inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT);
+    inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT_GAP);
     mapElement.classList.remove('map--faded');
     window.form.enableFields();
     window.map.createPins(window.map.offers);

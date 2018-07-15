@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var KEY_CODE_ESC = 27;
   var mapElement = document.querySelector('.map');
 
   var apartmentsType = function (type) {
@@ -48,7 +47,7 @@
 
   window.card = {
     onDocumentKeydown: function (evt) {
-      if (evt.keyCode === KEY_CODE_ESC) {
+      if (evt.keyCode === window.utils.KEY_CODE_ESC) {
         window.card.close();
       }
     },

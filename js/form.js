@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var KEY_CODE_ESC = 27;
   var MIN_LENGTH = 30;
   var MAX_LENGTH = 100;
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
@@ -56,10 +55,10 @@
   var file;
 
   var onTypeChange = function () {
-    var offerType = inputTypeFormElement.value;
-    inputPriceFormElement.min = RentValue[offerType.toUpperCase()].min;
-    inputPriceFormElement.max = RentValue[offerType.toUpperCase()].max;
-    inputPriceFormElement.placeholder = RentValue[offerType.toUpperCase()].placeholder;
+    var offerType = inputTypeFormElement.value.toUpperCase();
+    inputPriceFormElement.min = RentValue[offerType].min;
+    inputPriceFormElement.max = RentValue[offerType].max;
+    inputPriceFormElement.placeholder = RentValue[offerType].placeholder;
   };
   var onAmountCapacityChange = function () {
     if ((inputRoomsNumFormElement.value === '100') && (inputCapacityFormElement.value !== '0')) {
@@ -128,7 +127,7 @@
     document.addEventListener('keydown', onDocumentKeydown);
   };
   var onDocumentKeydown = function (evt) {
-    if (evt.keyCode === KEY_CODE_ESC) {
+    if (evt.keyCode === window.utils.KEY_CODE_ESC) {
       successMessageElement.classList.add('hidden');
     }
   };

@@ -34,13 +34,13 @@
     }
   };
   var filterByFeatures = function () {
-    for (var i = 0; i < featuresFiltersElement.length; i++) {
-      if (featuresFiltersElement[i].checked) {
+    featuresFiltersElement.forEach(function (item) {
+      if (item.checked) {
         filteredOffers = filteredOffers.filter(function (offerData) {
-          return offerData.offer.features.indexOf(featuresFiltersElement[i].value) >= 0;
+          return offerData.offer.features.indexOf(item.value) >= 0;
         });
       }
-    }
+    });
   };
 
   var updatePins = function () {

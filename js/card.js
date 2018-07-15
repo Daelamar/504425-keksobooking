@@ -6,16 +6,16 @@
   var apartmentsType = function (type) {
     var typeOffer = '';
     switch (type) {
-      case 'flat':
+      case 'FLAT':
         typeOffer = 'Квартира';
         break;
-      case 'bungalo':
+      case 'BUNGALO':
         typeOffer = 'Бунгало';
         break;
-      case 'house':
+      case 'HOUSE':
         typeOffer = 'Дом';
         break;
-      case 'palace':
+      case 'PALACE':
         typeOffer = 'Дворец';
         break;
     }
@@ -23,32 +23,38 @@
   };
   var createFeatures = function (addFeatures) {
     var newFeature = document.createDocumentFragment();
-    for (var j = 0; j < addFeatures.length; j++) {
+    addFeatures.forEach(function (item) {
       var newLi = document.createElement('li');
       newLi.classList.add('popup__feature');
-      newLi.classList.add('popup__feature--' + addFeatures[j]);
+      newLi.classList.add('popup__feature--' + item);
       newFeature.appendChild(newLi);
-    }
+    });
     return newFeature;
   };
   var createPhotosList = function (newPhotoList) {
     var photoList = document.createDocumentFragment();
-    for (var index = 0; index < newPhotoList.length; index++) {
+    newPhotoList.forEach(function (item) {
       var mapCardPhoto = document.createElement('img');
       mapCardPhoto.classList.add('popup__photo');
-      mapCardPhoto.src = newPhotoList[index];
+      mapCardPhoto.src = item;
       mapCardPhoto.width = '45';
       mapCardPhoto.height = '40';
       mapCardPhoto.alt = 'Фотография жилья';
       photoList.appendChild(mapCardPhoto);
-    }
+    });
     return photoList;
   };
 
   window.card = {
+    onDocumentKeydown: function (evt) {
+      if (evt.keyCode === window.utils.KEY_CODE_ESC) {
+        window.card.close();
+      }
+    },
     render: function (mapCards) {
       var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
       var popupElement = templateMapCard.cloneNode(true);
+
       popupElement.querySelector('.popup__title').textContent = mapCards.offer.title;
       popupElement.querySelector('.popup__text--address').textContent = mapCards.offer.address;
       popupElement.querySelector('.popup__text--price').textContent = mapCards.offer.price + ' ₽/ночь.';
@@ -67,18 +73,13 @@
       var oldCardElement = document.querySelector('.popup');
       if (oldCardElement) {
         oldCardElement.remove();
+        document.removeEventListener('keydown', window.card.onDocumentKeydown);
       }
     }
   };
 
   mapElement.addEventListener('click', function (evt) {
     if (evt.target.classList.contains('popup__close')) {
-      window.card.close();
-    }
-  });
-
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 27) {
       window.card.close();
     }
   });

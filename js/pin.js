@@ -11,17 +11,12 @@
     pinElement.addEventListener('click', function () {
       window.card.close();
       mapElement.insertBefore(cardElement, filtersContainerElement);
-    });
-    pinElement.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === 13) {
-        window.card.close();
-        mapElement.insertBefore(cardElement, filtersContainerElement);
-      }
+      document.addEventListener('keydown', window.card.onDocumentKeydown);
     });
   };
 
   window.pin = {
-    mapPinListElement: document.querySelector('.map__pins'),
+    listElement: document.querySelector('.map__pins'),
     render: function (mapPins) {
       var mapPinElement = templateMapPin.cloneNode(true);
       var newCardElement = window.card.render(mapPins);

@@ -1,11 +1,11 @@
 'use strict';
 
 (function () {
-  var PIN_MAP_RESTRICTION = {
-    coordsMinY: 130,
-    coordsMaxY: 630,
-    coordsMinX: 0,
-    coordsMaxX: 1140
+  var PinMapRestriction = {
+    COORDS_MIN_Y: 130,
+    COORDS_MAX_Y: 630,
+    COORDS_MIN_X: 0,
+    COORDS_MAX_X: 1140
   };
 
   var mapElement = document.querySelector('.map');
@@ -36,7 +36,7 @@
       mapPinMainLeft = mapPinMainElement.offsetLeft;
       mapPinMainTop = mapPinMainElement.offsetTop;
       inputAddressLeft = Math.round(mapPinMainLeft + mapPinMainWidth / 2);
-      inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT_MAIN_PIN);
+      inputAddressTop = Math.round(mapPinMainTop + mapPinMainHeight + window.mainPin.AFTER_ELEMENT);
       advertAddressInputElement.value = inputAddressLeft + ', ' + inputAddressTop;
 
       var shift = {
@@ -49,10 +49,10 @@
         y: moveEvt.clientY
       };
 
-      if ((mapPinMainElement.offsetTop - shift.y) > (PIN_MAP_RESTRICTION.coordsMinY - mapPinMainHeight - window.mainPin.AFTER_ELEMENT_MAIN_PIN - errorValue) && (mapPinMainElement.offsetTop - shift.y) < (PIN_MAP_RESTRICTION.coordsMaxY - mapPinMainHeight - window.mainPin.AFTER_ELEMENT_MAIN_PIN + errorValue)) {
+      if ((mapPinMainElement.offsetTop - shift.y) > (PinMapRestriction.COORDS_MIN_Y - mapPinMainHeight - window.mainPin.AFTER_ELEMENT - errorValue) && (mapPinMainElement.offsetTop - shift.y) < (PinMapRestriction.COORDS_MAX_Y - mapPinMainHeight - window.mainPin.AFTER_ELEMENT + errorValue)) {
         mapPinMainElement.style.top = (mapPinMainElement.offsetTop - shift.y) + 'px';
       }
-      if ((mapPinMainElement.offsetLeft - shift.x) > PIN_MAP_RESTRICTION.coordsMinX && (mapPinMainElement.offsetLeft - shift.x) < PIN_MAP_RESTRICTION.coordsMaxX) {
+      if ((mapPinMainElement.offsetLeft - shift.x) > PinMapRestriction.COORDS_MIN_X && (mapPinMainElement.offsetLeft - shift.x) < PinMapRestriction.COORDS_MAX_X) {
         mapPinMainElement.style.left = (mapPinMainElement.offsetLeft - shift.x) + 'px';
       }
     };
@@ -80,7 +80,7 @@
   });
 
   window.mainPin = {
-    AFTER_ELEMENT_MAIN_PIN: 20,
+    AFTER_ELEMENT: 20,
     attachEvents: attachEvents
   };
 
